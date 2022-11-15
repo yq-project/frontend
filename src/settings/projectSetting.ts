@@ -16,7 +16,7 @@ import { primaryColor } from '../../build/config/themeConfig';
 // 修改配置
 const setting: ProjectConfig = {
   // Whether to show the configuration button
-  showSettingButton: true,
+  showSettingButton: JSON.parse(import.meta.env.VITE_SHOW_SETTING),
 
   // Whether to show the theme switch button
   showDarkModeToggle: true,
@@ -177,5 +177,7 @@ const setting: ProjectConfig = {
   // If it is enabled, I want to overwrite a single interface. Can be set in a separate interface
   removeAllHttpPending: false,
 };
+
+console.log(setting);
 
 export default setting;
