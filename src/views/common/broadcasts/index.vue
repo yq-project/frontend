@@ -14,14 +14,10 @@
                 icon: 'ic:outline-delete-outline',
                 onClick: handleDelete.bind(null, record),
               },
-            ]"
-            :dropDownActions="[
               {
-                label: '启用',
-                popConfirm: {
-                  title: '是否启用？',
-                  confirm: handleOpen.bind(null, record),
-                },
+                label: '编辑',
+                icon: 'material-symbols:edit-document-outline',
+                onClick: handleDelete.bind(null, record), //popConfirm
               },
             ]"
           />
