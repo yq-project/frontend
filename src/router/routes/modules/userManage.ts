@@ -9,7 +9,7 @@ const dashboard: AppRouteModule = {
   component: LAYOUT,
   redirect: '/userManage/userList',
   meta: {
-    orderNo: 100,
+    orderNo: 200,
     icon: 'ion:grid-outline',
     title: t('routes.dashboard.userManage'),
   },
