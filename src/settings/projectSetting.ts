@@ -13,6 +13,7 @@ import { SIDE_BAR_BG_COLOR_LIST, HEADER_PRESET_BG_COLOR_LIST } from './designSet
 import { primaryColor } from '../../build/config/themeConfig';
 
 // ! You need to clear the browser cache after the change
+// 修改配置
 const setting: ProjectConfig = {
   // Whether to show the configuration button
   showSettingButton: true,
@@ -64,15 +65,15 @@ const setting: ProjectConfig = {
     // theme
     theme: ThemeEnum.LIGHT,
     // Whether to enable the lock screen function
-    useLockPage: true,
+    useLockPage: false,
     // Whether to show the full screen button
-    showFullScreen: true,
+    showFullScreen: false,
     // Whether to show the document button
-    showDoc: true,
+    showDoc: false,
     // Whether to show the notification button
-    showNotice: true,
+    showNotice: false,
     // Whether to display the menu search
-    showSearch: true,
+    showSearch: false,
   },
 
   // Menu configuration
@@ -120,7 +121,7 @@ const setting: ProjectConfig = {
   multiTabsSetting: {
     cache: false,
     // Turn on
-    show: true,
+    show: false,
     // Is it possible to drag and drop sorting tabs
     canDrag: true,
     // Turn on quick actions

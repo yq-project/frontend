@@ -3,6 +3,7 @@ import { DemoParams, DemoListGetResultModel } from './model/tableModel';
 
 enum Api {
   DEMO_LIST = '/table/getDemoList',
+  DEMO_LIST2 = '/table/getDemoList2',
 }
 
 /**
@@ -12,6 +13,16 @@ enum Api {
 export const demoListApi = (params: DemoParams) =>
   defHttp.get<DemoListGetResultModel>({
     url: Api.DEMO_LIST,
+    params,
+    headers: {
+      // @ts-ignore
+      ignoreCancelToken: true,
+    },
+  });
+
+export const demoListApi2 = (params: DemoParams) =>
+  defHttp.get<DemoListGetResultModel>({
+    url: Api.DEMO_LIST2,
     params,
     headers: {
       // @ts-ignore
