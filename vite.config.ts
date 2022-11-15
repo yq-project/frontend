@@ -50,6 +50,10 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           find: /\/#\//,
           replacement: pathResolve('types') + '/',
         },
+        {
+          find: /\/node_modules\/_ant-design-vue@3.2.0@\/ant-design-vue/,
+          replacement: '/node_modules/_ant-design-vue@3.2.0@ant-design-vue',
+        },
       ],
     },
     server: {
@@ -72,6 +76,9 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       // Turning off brotliSize display can slightly reduce packaging time
       brotliSize: false,
       chunkSizeWarningLimit: 2000,
+      // rollupOptions: {
+      //   external: ['ant-design-vue'],
+      // },
     },
     define: {
       // setting vue-i18-next
