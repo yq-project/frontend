@@ -19,7 +19,7 @@
         </div>
 
         <div class="p-2 px-4 flex justify-between">
-          <span>总{{ item.title }}</span>
+          <span>总舆情数</span>
           <CountTo prefix="" :startVal="1" :endVal="item.total" />
         </div>
       </Card>

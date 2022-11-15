@@ -11,6 +11,7 @@ const dashboard: AppRouteModule = {
   redirect: '/dashboard/analysis',
   meta: {
     orderNo: 100,
+    hideMenu: true,
     icon: 'ion:grid-outline',
     title: t('routes.dashboard.dashboard'),
     roles: [RoleEnum.ADMIN],

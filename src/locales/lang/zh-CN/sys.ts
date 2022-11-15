@@ -61,6 +61,7 @@ export default {
     backSignIn: '返回',
     signInFormTitle: '登录',
     mobileSignInFormTitle: '手机登录',
+    jAccountSignInFormTitle: 'JAccount登录',
     qrSignInFormTitle: '二维码登录',
     signUpFormTitle: '注册',
     forgetFormTitle: '重置密码',
@@ -85,6 +86,8 @@ export default {
     passwordPlaceholder: '请输入密码',
     smsPlaceholder: '请输入验证码',
     mobilePlaceholder: '请输入手机号码',
+    jAccountUsernamePlaceholder: '请输入jAccount用户名',
+    jAccountPasswordPlaceholder: '请输入jAccount密码',
     policyPlaceholder: '勾选后才能注册',
     diffPwd: '两次输入密码不一致',
 
@@ -94,5 +97,7 @@ export default {
     email: '邮箱',
     smsCode: '短信验证码',
     mobile: '手机号码',
+    jAccountUsername: 'jAccount用户名',
+    jAccountPassword: 'jAccount密码',
   },
 };

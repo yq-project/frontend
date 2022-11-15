@@ -5,20 +5,20 @@
       <FormItem name="mobile" class="enter-x">
         <Input
           size="large"
-          v-model:value="formData.mobile"
-          :placeholder="t('sys.login.mobile')"
+          v-model:value="formData.username"
+          :placeholder="t('sys.login.jAccountUsername')"
           class="fix-auto-fill"
         />
       </FormItem>
-      <FormItem name="sms" class="enter-x">
-        <CountdownInput
+      <FormItem name="password" class="enter-x">
+        <AInputPassword
           size="large"
+          visibilityToggle
+          v-model:value="formData.password"
+          :placeholder="t('sys.login.jAccountPassword')"
           class="fix-auto-fill"
-          v-model:value="formData.sms"
-          :placeholder="t('sys.login.smsCode')"
         />
       </FormItem>
-
       <FormItem class="enter-x">
         <Button type="primary" size="large" block @click="handleLogin" :loading="loading">
           {{ t('sys.login.loginButton') }}
@@ -33,7 +33,6 @@
 <script lang="ts" setup>
   import { reactive, ref, computed, unref } from 'vue';
   import { Form, Input, Button } from 'ant-design-vue';
-  import { CountdownInput } from '/@/components/CountDown';
   import LoginFormTitle from './LoginFormTitle.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
@@ -47,8 +46,8 @@
   const loading = ref(false);
 
   const formData = reactive({
-    mobile: '',
-    sms: '',
+    username: '',
+    password: '',
   });
 
   const { validForm } = useFormValid(formRef);
