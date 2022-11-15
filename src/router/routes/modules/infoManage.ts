@@ -1,3 +1,4 @@
+import { RoleEnum } from '/@/enums/roleEnum';
 import type { AppRouteModule } from '/@/router/types';
 
 import { LAYOUT } from '/@/router/constant';
@@ -13,6 +14,7 @@ const dashboard: AppRouteModule = {
     orderNo: 100,
     icon: 'ion:grid-outline',
     title: t('routes.dashboard.infoManage.infoManage'),
+    roles: [RoleEnum.ADMIN],
   },
   children: [
     {
