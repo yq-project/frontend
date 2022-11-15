@@ -1,3 +1,4 @@
+import { RoleEnum } from '/@/enums/roleEnum';
 import type { AppRouteModule } from '/@/router/types';
 
 import { LAYOUT } from '/@/router/constant';
@@ -12,7 +13,8 @@ const dashboard: AppRouteModule = {
     hideChildrenInMenu: false,
     icon: 'ic:sharp-manage-accounts',
     title: '信息管理',
-    orderNo: 2,
+    orderNo: 1020,
+    roles: [RoleEnum.USER],
   },
   children: [
     {

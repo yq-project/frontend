@@ -1,3 +1,4 @@
+import { RoleEnum } from '/@/enums/roleEnum';
 import type { AppRouteModule } from '/@/router/types';
 
 import { LAYOUT } from '/@/router/constant';
@@ -9,9 +10,10 @@ const dashboard: AppRouteModule = {
   component: LAYOUT,
   redirect: '/userManage/userList',
   meta: {
-    orderNo: 100,
+    orderNo: 130,
     icon: 'ion:grid-outline',
     title: t('routes.dashboard.userManage'),
+    roles: [RoleEnum.ADMIN],
   },
   children: [
     {

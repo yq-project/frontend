@@ -1,7 +1,7 @@
+import { RoleEnum } from '/@/enums/roleEnum';
 import type { AppRouteModule } from '/@/router/types';
 
 import { LAYOUT } from '/@/router/constant';
-import { t } from '/@/hooks/web/useI18n';
 
 const dashboard: AppRouteModule = {
   path: '/user/homepage',
@@ -12,7 +12,8 @@ const dashboard: AppRouteModule = {
     hideChildrenInMenu: true,
     icon: 'clarity:dashboard-line',
     title: '主页',
-    orderNo: 1,
+    orderNo: 1000,
+    roles: [RoleEnum.USER],
   },
   children: [
     {
