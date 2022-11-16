@@ -1,3 +1,4 @@
+import { RoleEnum } from '/@/enums/roleEnum';
 import type { AppRouteModule } from '/@/router/types';
 
 import { LAYOUT } from '/@/router/constant';
@@ -12,6 +13,7 @@ const dashboard: AppRouteModule = {
     icon: 'icon-park-outline:blackboard',
     title: '通知公告',
     orderNo: 10000,
+    roles: [RoleEnum.USER],
   },
   children: [
     {

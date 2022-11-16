@@ -5,14 +5,14 @@ import { LAYOUT } from '/@/router/constant';
 import { t } from '/@/hooks/web/useI18n';
 
 const dashboard: AppRouteModule = {
-  path: '/userManage',
-  name: 'UserManage',
+  path: '/user',
+  name: 'User',
   component: LAYOUT,
-  redirect: '/userManage/userList',
+  redirect: '/user/userList',
   meta: {
-    orderNo: 130,
+    orderNo: 100,
     icon: 'ion:grid-outline',
-    title: t('routes.dashboard.userManage'),
+    title: t('routes.dashboard.user'),
     roles: [RoleEnum.ADMIN],
   },
   children: [
@@ -23,6 +23,15 @@ const dashboard: AppRouteModule = {
       meta: {
         // affix: true,
         title: t('routes.dashboard.userList'),
+      },
+    },
+    {
+      path: 'userManage',
+      name: 'UserManage',
+      component: () => import('/@/views/admin/userManage/EditCellTable.vue'),
+      meta: {
+        // affix: true,
+        title: t('routes.dashboard.userManage'),
       },
     },
   ],

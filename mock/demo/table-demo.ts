@@ -37,6 +37,11 @@ const demoList = (() => {
       time: `@time('HH:mm')`,
       'no|100000-10000000': 100000,
       'status|1': ['normal', 'enable', 'disable'],
+      uploadInfoNum: `${index}`,
+      uploadInfoScore: `${index}`,
+      userId: `${index}`,
+      'state|1': ['在线', '离线'],
+      'role|1': ['管理员', '学生助管', '学院领导'],
     });
   }
   return result;
