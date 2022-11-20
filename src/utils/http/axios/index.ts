@@ -10,12 +10,12 @@ import { useGlobSetting } from '/@/hooks/setting';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { RequestEnum, ResultEnum, ContentTypeEnum } from '/@/enums/httpEnum';
 import { isString } from '/@/utils/is';
-import { getToken } from '/@/utils/auth';
 import { setObjToUrlParams, deepMerge } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate } from './helper';
 import { useUserStoreWithOut } from '/@/store/modules/user';
+import { ConsoleSqlOutlined } from '@ant-design/icons-vue';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
@@ -41,7 +41,6 @@ const transform: AxiosTransform = {
       return res.data;
     }
     // 错误的时候返回
-
     const { data } = res;
     if (!data) {
       // return '[HTTP] Request has no return value';
@@ -54,6 +53,8 @@ const transform: AxiosTransform = {
     const hasSuccess = data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS;
     if (hasSuccess) {
       return result;
+    } else {
+      return data;
     }
 
     // 在此处根据自己项目的实际情况对不同的code执行不同的操作
@@ -79,7 +80,6 @@ const transform: AxiosTransform = {
     } else if (options.errorMessageMode === 'message') {
       createMessage.error(timeoutMsg);
     }
-
     throw new Error(timeoutMsg || t('sys.api.apiRequestFailed'));
   },
 
@@ -136,14 +136,6 @@ const transform: AxiosTransform = {
    * @description: 请求拦截器处理
    */
   requestInterceptors: (config, options) => {
-    // 请求之前处理config
-    const token = getToken();
-    if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
-      // jwt token
-      (config as Recordable).headers.Authorization = options.authenticationScheme
-        ? `${options.authenticationScheme} ${token}`
-        : token;
-    }
     return config;
   },
 
@@ -241,10 +233,16 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
 }
 export const defHttp = createAxios();
 
-// other api url
-// export const otherHttp = createAxios({
-//   requestOptions: {
-//     apiUrl: 'xxx',
-//     urlPrefix: 'xxx',
-//   },
-// });
+// auth api url
+export const authHttp = createAxios({
+  requestOptions: {
+    apiUrl: '/auth',
+  },
+});
+
+// 其他 api url
+export const basicHttp = createAxios({
+  requestOptions: {
+    apiUrl: '/api',
+  },
+});

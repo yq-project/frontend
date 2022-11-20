@@ -29,11 +29,9 @@ export function createPermissionGuard(router: Router) {
       return;
     }
 
-    const token = userStore.getToken;
-
     // Whitelist can be directly entered
     if (whitePathList.includes(to.path as PageEnum)) {
-      if (to.path === LOGIN_PATH && token) {
+      if (to.path === LOGIN_PATH) {
         const isSessionTimeout = userStore.getSessionTimeout;
         try {
           await userStore.afterLoginAction();
@@ -48,27 +46,27 @@ export function createPermissionGuard(router: Router) {
     }
 
     // token does not exist
-    if (!token) {
-      // You can access without permission. You need to set the routing meta.ignoreAuth to true
-      if (to.meta.ignoreAuth) {
-        next();
-        return;
-      }
+    // if (!token) {
+    //   // You can access without permission. You need to set the routing meta.ignoreAuth to true
+    //   if (to.meta.ignoreAuth) {
+    //     next();
+    //     return;
+    //   }
 
-      // redirect login page
-      const redirectData: { path: string; replace: boolean; query?: Recordable<string> } = {
-        path: LOGIN_PATH,
-        replace: true,
-      };
-      if (to.path) {
-        redirectData.query = {
-          ...redirectData.query,
-          redirect: to.path,
-        };
-      }
-      next(redirectData);
-      return;
-    }
+    //   // redirect login page
+    //   const redirectData: { path: string; replace: boolean; query?: Recordable<string> } = {
+    //     path: LOGIN_PATH,
+    //     replace: true,
+    //   };
+    //   if (to.path) {
+    //     redirectData.query = {
+    //       ...redirectData.query,
+    //       redirect: to.path,
+    //     };
+    //   }
+    //   next(redirectData);
+    //   return;
+    // }
 
     // Jump to the 404 page after processing the login
     if (

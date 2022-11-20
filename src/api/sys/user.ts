@@ -1,12 +1,12 @@
-import { defHttp } from '/@/utils/http/axios';
+import { authHttp } from '/@/utils/http/axios';
 import { LoginParams, LoginResultModel, GetUserInfoModel } from './model/userModel';
 
 import { ErrorMessageMode } from '/#/axios';
 
 enum Api {
-  Login = '/login',
-  Logout = '/logout',
-  GetUserInfo = '/getUserInfo',
+  Login = '/login/',
+  Logout = '/logout/',
+  GetUserInfo = '/me/',
   GetPermCode = '/getPermCode',
 }
 
@@ -14,7 +14,7 @@ enum Api {
  * @description: user login api
  */
 export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
-  return defHttp.post<LoginResultModel>(
+  return authHttp.post(
     {
       url: Api.Login,
       params,
@@ -25,17 +25,17 @@ export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') 
   );
 }
 
-/**
- * @description: getUserInfo
- */
+// 检查用户登陆状态
 export function getUserInfo() {
-  return defHttp.get<GetUserInfoModel>({ url: Api.GetUserInfo }, { errorMessageMode: 'none' });
+  return authHttp.get({ url: Api.GetUserInfo }, { errorMessageMode: 'none' });
 }
 
+// 这个接口不会使用，但删掉的话改动太大了
 export function getPermCode() {
-  return defHttp.get<string[]>({ url: Api.GetPermCode });
+  return authHttp.get<string[]>({ url: Api.GetPermCode });
 }
 
+// 登出
 export function doLogout() {
-  return defHttp.get({ url: Api.Logout });
+  return authHttp.get({ url: Api.Logout });
 }
