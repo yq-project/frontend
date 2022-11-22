@@ -19,7 +19,7 @@ const setting: ProjectConfig = {
   showSettingButton: JSON.parse(import.meta.env.VITE_SHOW_SETTING),
 
   // Whether to show the theme switch button
-  showDarkModeToggle: true,
+  showDarkModeToggle: JSON.parse(import.meta.env.VITE_SHOW_SETTING),
 
   // `Settings` button position
   settingButtonPosition: SettingButtonPositionEnum.AUTO,
@@ -28,7 +28,7 @@ const setting: ProjectConfig = {
   permissionMode: PermissionModeEnum.ROUTE_MAPPING,
 
   // Permission-related cache is stored in sessionStorage or localStorage
-  permissionCacheType: CacheTypeEnum.LOCAL,
+  permissionCacheType: CacheTypeEnum.SESSION,
 
   // Session timeout processing
   sessionTimeoutProcessing: SessionTimeoutProcessingEnum.ROUTE_JUMP,

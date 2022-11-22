@@ -1,0 +1,36 @@
+###### 用户权限相关的接口
+POST http://10.119.4.98:8000/auth/login/ HTTP/1.1
+content-type: application/json
+
+{
+    "username": "admin",
+    "password": "admin"
+}
+
+####
+POST http://localhost:3100/auth/login/ HTTP/1.1
+content-type: application/json
+
+{
+    "username": "admin",
+    "password": "admin"
+}
+
+#########################
+GET http://10.119.4.98:8000/auth/me/ HTTP/1.1
+#####
+
+GET http://localhost:3100/auth/me/ HTTP/1.1
+
+#####
+GET http://10.119.4.98:8000/auth/logout/ HTTP/1.1
+
+
+###
+GET http://localhost:3100/auth/logout/ HTTP/1.1
+
+###### 
+GET http://localhost:3100/api/process_task/ HTTP/1.1
+
+#####
+POST http://localhost:3100/api/comment_task/ HTTP/1.1

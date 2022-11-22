@@ -52,9 +52,6 @@ function createPageLoadingGuard(router: Router) {
   const appStore = useAppStoreWithOut();
   const { getOpenPageLoading } = useTransitionSetting();
   router.beforeEach(async (to) => {
-    if (!userStore.getToken) {
-      return true;
-    }
     if (to.meta.loaded) {
       return true;
     }

@@ -21,10 +21,6 @@ export function useLockPage() {
 
   function resetCalcLockTimeout(): void {
     // not login
-    if (!userStore.getToken) {
-      clear();
-      return;
-    }
     const lockTime = appStore.getProjectConfig.lockTime;
     if (!lockTime || lockTime < 1) {
       clear();
@@ -45,11 +41,7 @@ export function useLockPage() {
   }
 
   watchEffect((onClean) => {
-    if (userStore.getToken) {
-      resetCalcLockTimeout();
-    } else {
-      clear();
-    }
+    resetCalcLockTimeout();
     onClean(() => {
       clear();
     });
