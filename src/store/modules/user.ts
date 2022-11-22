@@ -92,7 +92,6 @@ export const useUserStore = defineStore({
     async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
       // get user info
       const userInfo = await this.getUserInfoAction();
-      console.log(userInfo);
       const sessionTimeout = this.sessionTimeout;
       if (sessionTimeout) {
         this.setSessionTimeout(false);
@@ -100,7 +99,6 @@ export const useUserStore = defineStore({
         const permissionStore = usePermissionStore();
         if (!permissionStore.isDynamicAddedRoute) {
           const routes = await permissionStore.buildRoutesAction();
-          console.log(routes);
           routes.forEach((route) => {
             router.addRoute(route as unknown as RouteRecordRaw);
           });
