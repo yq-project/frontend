@@ -1,10 +1,11 @@
+import { RoleInfo } from './../../api/sys/model/userModel';
 import type { UserInfo } from '/#/store';
 import type { ErrorMessageMode } from '/#/axios';
 import { defineStore } from 'pinia';
 import { store } from '/@/store';
 import { RoleEnum } from '/@/enums/roleEnum';
 import { PageEnum } from '/@/enums/pageEnum';
-import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
+import { ROLES_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
 import { GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel';
 import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
@@ -16,6 +17,7 @@ import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { isArray } from '/@/utils/is';
 import { h } from 'vue';
+import { useWatermark } from '/@/hooks/web/useWatermark';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
@@ -90,7 +92,7 @@ export const useUserStore = defineStore({
     async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
       // get user info
       const userInfo = await this.getUserInfoAction();
-
+      console.log(userInfo);
       const sessionTimeout = this.sessionTimeout;
       if (sessionTimeout) {
         this.setSessionTimeout(false);
@@ -111,7 +113,18 @@ export const useUserStore = defineStore({
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
       const userInfo = await getUserInfo();
-      const { roles = [{ value: 'admin' }] } = userInfo;
+      let roles: RoleInfo[] = [];
+      const { setWatermark, clear } = useWatermark();
+      clear();
+      if (userInfo.username == 'user') {
+        roles.push({ roleName: 'user', value: 'user' });
+        userInfo.homePath = '/user/homepage';
+        setWatermark(userInfo?.username); //user添加水印
+      } else {
+        roles = [{ roleName: 'admin', value: 'admin' }];
+        userInfo.homePath = '/home/index';
+      }
+      userInfo.role = roles;
       if (isArray(roles)) {
         const roleList = roles.map((item) => item.value) as RoleEnum[];
         this.setRoleList(roleList);

@@ -46,7 +46,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-  import { computed } from 'vue';
+  import { computed,onMounted } from 'vue';
   import { AppLogo } from '/@/components/Application';
   import { AppLocalePicker, AppDarkModeToggle } from '/@/components/Application';
   import LoginForm from './LoginForm.vue';
@@ -58,6 +58,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useLocaleStore } from '/@/store/modules/locale';
+  import { useWatermark } from '/@/hooks/web/useWatermark';
 
   defineProps({
     sessionTimeout: {
@@ -71,6 +72,10 @@
   const localeStore = useLocaleStore();
   const showLocale = localeStore.getShowPicker;
   const title = computed(() => globSetting?.title ?? '');
+  const { clear } = useWatermark();
+  onMounted(() => {
+    clear();
+  });
 </script>
 <style lang="less">
   @prefix-cls: ~'@{namespace}-login';

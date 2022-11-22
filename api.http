@@ -12,8 +12,8 @@ POST http://localhost:3100/auth/login/ HTTP/1.1
 content-type: application/json
 
 {
-    "username": "admin",
-    "password": "admin"
+    "username": "user",
+    "password": "sjtuwxbuser"
 }
 
 #########################
