@@ -16,6 +16,7 @@ import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate } from './helper';
 import { useUserStoreWithOut } from '/@/store/modules/user';
+import axios from 'axios';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
@@ -233,6 +234,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           ignoreCancelToken: true,
           // 是否携带token
           withToken: true,
+          withCredentials: true,
         },
       },
       opt || {},
@@ -244,7 +246,18 @@ export const defHttp = createAxios();
 // other api url
 // export const otherHttp = createAxios({
 //   requestOptions: {
-//     apiUrl: 'xxx',
-//     urlPrefix: 'xxx',
+//     apiUrl: 'http://10.119.4.98:8000',
+//     joinTime: false,
 //   },
 // });
+
+export const otherHttp = axios.create({
+  baseURL: '/',
+  withCredentials: true,
+  headers: {
+    // 设置后端需要的传参类型
+    'Content-Type': 'application/json',
+    token: 'your token',
+    'X-Requested-With': 'XMLHttpRequest',
+  },
+});

@@ -1,5 +1,8 @@
 <template>
-  <Card title="访问来源" :loading="loading">
+  <Card title="选择时间">
+    <UseForm />
+  </Card>
+  <Card title="信息种类">
     <div ref="chartRef" :style="{ width, height }"></div>
   </Card>
 </template>

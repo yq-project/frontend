@@ -1,4 +1,7 @@
 <template>
+  <Card title="选择时间">
+    <UseForm />
+  </Card>
   <Card
     :tab-list="tabListTitle"
     v-bind="$attrs"
@@ -8,16 +11,14 @@
     <p v-if="activeKey === 'tab1'">
       <VisitAnalysisBar />
     </p>
-    <p v-if="activeKey === 'tab2'">
-      <VisitAnalysisBar />
-    </p>
+    <p v-if="activeKey === 'tab2'"> </p>
   </Card>
 </template>
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { Card } from 'ant-design-vue';
-  import VisitAnalysis from './VisitAnalysis.vue';
   import VisitAnalysisBar from './VisitAnalysisBar.vue';
+  import UseForm from './UseForm.vue';
 
   const activeKey = ref('tab1');
 

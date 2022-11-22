@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <BasicTable @register="registerTable" @edit-change="onEditChange">
+    <BasicTable @register="registerTable">
       <template #bodyCell="{ column }">
         <template v-if="column.key === '操作'">
           <a-button class="mr-2" @click="goToDetail"> 查看详情 </a-button>
@@ -13,7 +13,7 @@
   import { defineComponent } from 'vue';
   import { BasicTable, useTable, BasicColumn } from '/@/components/Table';
 
-  import { demoListApi } from '/@/api/demo/table';
+  import { demoListApi } from '/@/api/demo/info';
   import { useRouter } from 'vue-router';
 
   const columns: BasicColumn[] = [
