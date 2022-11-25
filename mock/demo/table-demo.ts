@@ -42,6 +42,7 @@ const demoList = (() => {
       userId: `${index}`,
       'state|1': ['在线', '离线'],
       'role|1': ['管理员', '学生助管', '学院领导'],
+      'department|1': ['网宣办', '电院', '机动'],
     });
   }
   return result;

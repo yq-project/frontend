@@ -7,9 +7,18 @@
             stopButtonPropagation
             :actions="[
               {
+                label: '编辑',
+                icon: 'clarity:note-edit-line',
+                onClick: handleEdit.bind(null, record),
+              },
+              {
                 label: '删除',
                 icon: 'ic:outline-delete-outline',
-                onClick: handleDelete.bind(null, record),
+                popConfirm: {
+                  title: '是否确认删除',
+                  placement: 'left',
+                  confirm: handleDelete.bind(null, record),
+                },
               },
             ]"
           />
@@ -76,6 +85,12 @@
       width: 150,
       sorter: true,
     },
+    {
+      title: '部门',
+      dataIndex: 'department',
+      width: 150,
+      sorter: true,
+    },
   ];
   export default defineComponent({
     components: { BasicTable, TableAction, ImpExcel, AccountModal },
@@ -122,6 +137,13 @@
           reload();
         }
       }
+      function handleEdit(record: Recordable) {
+        console.log(record);
+        openModal(true, {
+          record,
+          isUpdate: true,
+        });
+      }
       return {
         registerTable,
         handleDelete,
@@ -129,6 +151,7 @@
         userLoading,
         registerModal,
         handleSuccess,
+        handleEdit,
       };
     },
   });
