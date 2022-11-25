@@ -10,16 +10,16 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, onBeforeMount, ref } from 'vue';
   import { BasicTable, useTable, BasicColumn } from '/@/components/Table';
 
-  import { demoListApi } from '/@/api/demo/info';
-  import { useRouter } from 'vue-router';
+  import { infoListApi } from '/@/api/demo/table';
+  import { router } from '/@/router';
 
   const columns: BasicColumn[] = [
     {
       title: '舆情主题',
-      dataIndex: 'content',
+      dataIndex: 'subject',
       editRow: true,
       editComponentProps: {
         prefix: '$',
@@ -30,11 +30,11 @@
       title: '上传时间',
       width: 150,
       sorter: true,
-      dataIndex: 'beginTime',
+      dataIndex: 'created_at',
     },
     {
       title: '上传用户',
-      dataIndex: 'name',
+      dataIndex: 'creator',
       width: 150,
       filters: [
         { text: 'Male', value: 'male' },
@@ -44,11 +44,11 @@
     {
       title: '涉及单位',
       width: 150,
-      dataIndex: 'content',
+      dataIndex: 'department',
     },
     {
       title: '信息种类',
-      dataIndex: 'no',
+      dataIndex: 'infoType',
       width: 150,
       sorter: true,
       // defaultHidden: true,
@@ -57,18 +57,25 @@
       title: '当前状态',
       width: 150,
       sorter: true,
-      dataIndex: 'status_info',
+      dataIndex: 'state',
     },
   ];
+
   export default defineComponent({
     components: { BasicTable },
     setup() {
-      const router = useRouter();
+      const data = ref([]);
+      onBeforeMount(async () => {
+        const res = await infoListApi();
+        data.value = res.results;
+      });
+      console.log(data);
       const [registerTable] = useTable({
         title: '舆情信息列表',
         titleHelpMessage: ['以列表的形式展示所有的舆情信息'],
-        api: demoListApi,
         columns: columns,
+        // api: demoListApi,
+        dataSource: data,
         showIndexColumn: false,
         showTableSetting: true,
         tableSetting: { fullScreen: true },
@@ -83,7 +90,9 @@
       function goToDetail() {
         router.push('/infoManage/infoDetail');
       }
+
       return {
+        data,
         goToDetail,
         registerTable,
       };
