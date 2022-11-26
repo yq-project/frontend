@@ -1,4 +1,4 @@
-import { RoleInfo } from './../../api/sys/model/userModel';
+import { RoleInfo, AuthParams } from './../../api/sys/model/userModel';
 import type { UserInfo } from '/#/store';
 import type { ErrorMessageMode } from '/#/axios';
 import { defineStore } from 'pinia';
@@ -8,7 +8,7 @@ import { PageEnum } from '/@/enums/pageEnum';
 import { ROLES_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
 import { GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel';
-import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
+import { authApi, doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { router } from '/@/router';
@@ -89,6 +89,16 @@ export const useUserStore = defineStore({
         return Promise.reject(error);
       }
     },
+
+    async jaccountLogin(params: AuthParams): Promise<any> {
+      try {
+        await authApi(params);
+        return this.afterLoginAction(true);
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    },
+
     async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
       // get user info
       const userInfo = await this.getUserInfoAction();
@@ -114,11 +124,12 @@ export const useUserStore = defineStore({
       let roles: RoleInfo[] = [];
       const { setWatermark, clear } = useWatermark();
       clear();
-      if (userInfo.username == 'user') {
+      if (userInfo.role == 1) {
         roles.push({ roleName: 'user', value: 'user' });
         userInfo.homePath = '/user/homepage';
-        setWatermark(userInfo?.username); //user添加水印
-      } else {
+        setWatermark(userInfo?.name + ' ' + userInfo?.number); //user添加水印
+      }
+      if (userInfo.role == 0) {
         roles = [{ roleName: 'admin', value: 'admin' }];
         userInfo.homePath = '/home/index';
       }

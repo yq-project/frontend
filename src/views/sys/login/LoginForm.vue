@@ -134,19 +134,30 @@
     }
   }
 
-  onMounted(() => {
+  onMounted(async () => {
     if (router.currentRoute.value.query.code && router.currentRoute.value.query.state) {
       let code: string = router.currentRoute.value.query.code as string;
       let state: string = router.currentRoute.value.query.state as string;
       let params: AuthParams = { code: code, state: state };
-      authApi(params).then(
-        (res) => {
-          console.log(res);
-        },
-        (err) => {
-          console.log('登陆失败');
-        },
-      );
+      try {
+        loading.value = true;
+        const userInfo = await userStore.jaccountLogin(params);
+        if (userInfo) {
+          notification.success({
+            message: t('sys.login.loginSuccessTitle'),
+            description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.name}`,
+            duration: 3,
+          });
+        }
+      } catch (error) {
+        createErrorModal({
+          title: t('sys.api.errorTip'),
+          content: (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),
+          getContainer: () => document.body.querySelector(`.${prefixCls}`) || document.body,
+        });
+      } finally {
+        loading.value = false;
+      }
     }
   });
 
