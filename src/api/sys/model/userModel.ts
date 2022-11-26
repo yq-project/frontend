@@ -6,6 +6,11 @@ export interface LoginParams {
   password: string;
 }
 
+export interface AuthParams {
+  code: string;
+  state: string;
+}
+
 export interface RoleInfo {
   roleName: string;
   value: string;

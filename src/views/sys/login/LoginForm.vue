@@ -48,14 +48,14 @@
       <Button type="primary" size="large" block @click="handleLogin" :loading="loading">
         {{ t('sys.login.loginButton') }}
       </Button>
-      <Button size="large" class="mt-4 enter-x" block @click="setLoginState(LoginStateEnum.MOBILE)">
+      <Button size="large" class="mt-4 enter-x" block @click="handleJAccountLogin">
         {{ t('sys.login.jAccountSignInFormTitle') }}
       </Button>
     </FormItem>
   </Form>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, unref, computed } from 'vue';
+  import { reactive, ref, unref, computed, onMounted } from 'vue';
 
   import { Checkbox, Form, Input, Row, Col, Button, Divider } from 'ant-design-vue';
   import {
@@ -73,8 +73,12 @@
   import { useUserStore } from '/@/store/modules/user';
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
+  import { useRouter } from 'vue-router';
+  import { authApi } from '/@/api/sys/user';
+  import { AuthParams } from '/@/api/sys/model/userModel';
   //import { onKeyStroke } from '@vueuse/core';
 
+  const router = useRouter();
   const ACol = Col;
   const ARow = Row;
   const FormItem = Form.Item;
@@ -129,4 +133,25 @@
       loading.value = false;
     }
   }
+
+  onMounted(() => {
+    if (router.currentRoute.value.query.code && router.currentRoute.value.query.state) {
+      let code: string = router.currentRoute.value.query.code as string;
+      let state: string = router.currentRoute.value.query.state as string;
+      let params: AuthParams = { code: code, state: state };
+      authApi(params).then(
+        (res) => {
+          console.log(res);
+        },
+        (err) => {
+          console.log('登陆失败');
+        },
+      );
+    }
+  });
+
+  const handleJAccountLogin = () => {
+    let rediretUrl = `${window.location.origin}/%23/login`;
+    window.location.href = `/auth/jaccount/login/?redirect_uri=${rediretUrl}`;
+  };
 </script>

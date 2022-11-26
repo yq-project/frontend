@@ -1,5 +1,5 @@
 import { authHttp } from '/@/utils/http/axios';
-import { LoginParams, LoginResultModel, GetUserInfoModel } from './model/userModel';
+import { LoginParams, AuthParams } from './model/userModel';
 
 import { ErrorMessageMode } from '/#/axios';
 
@@ -8,6 +8,7 @@ enum Api {
   Logout = '/logout/',
   GetUserInfo = '/me/',
   GetPermCode = '/getPermCode',
+  Auth = '/jaccount/auth/',
 }
 
 /**
@@ -18,6 +19,17 @@ export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') 
     {
       url: Api.Login,
       params,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+export function authApi(params: AuthParams, mode: ErrorMessageMode = 'modal') {
+  return authHttp.get(
+    {
+      url: Api.Auth + `?state=${params.state}&code=${params.code}`,
     },
     {
       errorMessageMode: mode,
