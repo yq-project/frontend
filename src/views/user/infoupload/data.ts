@@ -28,25 +28,25 @@ const TypeOptions: LabelValueOptions = [
 
 export const schemas: FormSchema[] = [
   {
-    field: 'f1',
+    field: 'subject',
     component: 'Input',
     label: '主题',
     required: true,
   },
   {
-    field: 'f2',
+    field: 'content',
     component: 'InputTextArea',
     label: '内容',
     required: true,
   },
   {
-    field: 'f3',
+    field: 'infoUrl',
     component: 'Input',
     label: '链接',
     required: true,
   },
   {
-    field: 'f4',
+    field: 'department',
     component: 'Select',
     label: '涉及单位',
     componentProps: {
@@ -55,7 +55,7 @@ export const schemas: FormSchema[] = [
     required: true,
   },
   {
-    field: 'f5',
+    field: 'infoType',
     component: 'Select',
     label: '信息种类',
     componentProps: {
