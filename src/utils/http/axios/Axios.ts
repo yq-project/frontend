@@ -129,6 +129,7 @@ export class VAxios {
     } else {
       formData.append(customFilename, params.file);
     }
+    formData.append('type', 'card_background');
 
     if (params.data) {
       Object.keys(params.data).forEach((key) => {
@@ -150,6 +151,8 @@ export class VAxios {
       data: formData,
       headers: {
         'Content-type': ContentTypeEnum.FORM_DATA,
+        'Api-Username': 'linton',
+        'API-KEY': '18a681324c87403d2c9ea1cb702f552b822d765cb4afa776d3049a7be0977000',
         // @ts-ignore
         ignoreCancelToken: true,
       },

@@ -74,11 +74,11 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           },
         },
         '/upload': {
-          target: 'https://api.imgbb.com/1/',
+          target: 'https://shuiyuanbeta.sjtu.edu.cn',
           changeOrigin: true,
           secure: false,
           rewrite: (path) => {
-            return path;
+            return 'uploads.json';
           },
         },
       },

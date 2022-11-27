@@ -29,6 +29,7 @@
   import { BasicUpload } from '/@/components/Upload';
   import { uploadApi } from '/@/api/sys/upload';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { createInfoApi } from '/@/api/sys/info'
 
   export default defineComponent({
     name: 'FormHightPage',
@@ -40,8 +41,19 @@
         showActionButtonGroup: false,
       });
       async function submitAll() {
-        const data = await validate();
+        // const data = await validate();
+        const data={
+          content:"123",
+          department:"1234",
+          infoType:'yde',
+          infoUrl:'dcfdvcf',
+          picture:'额的',
+          subject:'dcdvf'
+        }
         console.log(data);
+        createInfoApi(data).then((res)=>{
+          console.log(res)
+        })
       }
       const { createMessage } = useMessage();
       const handleChange = (list: string[]) => {
