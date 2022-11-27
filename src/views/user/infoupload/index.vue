@@ -1,10 +1,8 @@
 <template>
-  <PageWrapper title="信息上传">
-      <InfoList/>
-  </PageWrapper>
+  <div class="p-4">
+    <InfoList/>
+  </div>
 </template>
 <script lang="ts" setup>
-  import { PageWrapper } from '/@/components/Page';
-  import { Card } from 'ant-design-vue';
-  import InfoList from './components/InfoList.vue'
+  import InfoList from './components/InfoList.vue';
 </script>

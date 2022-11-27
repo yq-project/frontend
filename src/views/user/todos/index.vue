@@ -1,12 +1,12 @@
 <template>
-  <PageWrapper title="待办事务">
+  <div>
     <div class="p-4">
       <TodoCard />
     </div>
     <div class="p-4">
       <HistoryTask />
     </div>
-  </PageWrapper>
+  </div>
 </template>
 <script lang="ts" setup>
   import { PageWrapper } from '/@/components/Page';
