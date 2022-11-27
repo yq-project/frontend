@@ -5,7 +5,14 @@
     </a-card>
 
     <a-card title="截图上传" :bordered="false">
-        
+      <BasicUpload
+        :maxSize="20"
+        :maxNumber="1"
+        @change="handleChange"
+        :api="uploadApi"
+        class="my-5"
+        :accept="['png', 'jpg', 'jpeg']"
+      />
     </a-card>
 
     <template #rightFooter>
@@ -14,25 +21,33 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-import { BasicForm, useForm } from '/@/components/Form';
+  import { BasicForm, useForm } from '/@/components/Form';
   import { defineComponent } from 'vue';
   import { PageWrapper } from '/@/components/Page';
   import { Card } from 'ant-design-vue';
   import { schemas } from './data';
+  import { BasicUpload } from '/@/components/Upload';
+  import { uploadApi } from '/@/api/sys/upload';
+  import { useMessage } from '/@/hooks/web/useMessage';
 
   export default defineComponent({
     name: 'FormHightPage',
-    components: { BasicForm, PageWrapper, [Card.name]: Card },
+    components: { BasicForm, BasicUpload, PageWrapper, [Card.name]: Card },
     setup() {
-      const [register] = useForm({
+      const [register, { validate }] = useForm({
         layout: 'vertical',
         schemas: schemas,
         showActionButtonGroup: false,
       });
       async function submitAll() {
-        console.log('submit');
+        const data = await validate();
+        console.log(data);
       }
-      return { submitAll, register };
+      const { createMessage } = useMessage();
+      const handleChange = (list: string[]) => {
+        createMessage.info(`已上传文件${JSON.stringify(list)}`);
+      };
+      return { submitAll, register, uploadApi, handleChange };
     },
   });
 </script>

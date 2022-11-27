@@ -73,6 +73,14 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
             return path;
           },
         },
+        '/upload': {
+          target: 'https://api.imgbb.com/1/',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => {
+            return path;
+          },
+        },
       },
     },
     build: {
