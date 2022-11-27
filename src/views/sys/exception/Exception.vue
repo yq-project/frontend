@@ -10,6 +10,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useGo, useRedo } from '/@/hooks/web/usePage';
   import { PageEnum } from '/@/enums/pageEnum';
+  import { useRouter } from 'vue-router';
 
   interface MapValue {
     title: string;
@@ -105,6 +106,10 @@
         handler: () => redo(),
         icon: netWorkSvg,
       });
+      const router = useRouter();
+      setTimeout(() => {
+        router.push(PageEnum.BASE_LOGIN);
+      }, 1000);
 
       return () => {
         const { title, subTitle, btnText, icon, handler, status } = unref(getMapValue) || {};

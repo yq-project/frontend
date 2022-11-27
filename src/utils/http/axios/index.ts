@@ -170,8 +170,9 @@ const transform: AxiosTransform = {
     } catch (error) {
       throw new Error(error as unknown as string);
     }
-
-    checkStatus(error?.response?.status, msg, errorMessageMode);
+    if (error.request.responseURL.indexOf('/auth/me') == -1) {
+      checkStatus(error?.response?.status, msg, errorMessageMode);
+    }
     return Promise.reject(error);
   },
 };
