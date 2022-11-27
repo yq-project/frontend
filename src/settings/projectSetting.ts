@@ -178,6 +178,4 @@ const setting: ProjectConfig = {
   removeAllHttpPending: false,
 };
 
-console.log(setting);
-
 export default setting;

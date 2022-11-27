@@ -17,12 +17,10 @@ export function useWatermark(
   const id = domSymbol.toString();
   const watermarkEl = shallowRef<HTMLElement>();
 
-  onMounted(() => {
-    const watermarkMask = document.getElementById(id);
-    if (!isNull(watermarkMask)) {
-      watermarkEl.value = watermarkMask!;
-    }
-  });
+  const watermarkMask = document.getElementById(id);
+  if (!isNull(watermarkMask)) {
+    watermarkEl.value = watermarkMask!;
+  }
 
   const clear = () => {
     const domId = unref(watermarkEl);
