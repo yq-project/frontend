@@ -25,6 +25,10 @@
       const data = ref([]);
       onBeforeMount(async () => {
         const res = await userListApi();
+        res.results.forEach((item) => {
+          item.uploadInfoNum = (Math.random() * 50).toFixed(2);
+          item.uploadInfoScore = (Math.random() * 5).toFixed(2);
+        });
         data.value = res.results;
       });
       const [registerTable] = useTable({

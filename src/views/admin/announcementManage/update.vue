@@ -78,6 +78,7 @@
           query: {
             title: record.title,
             content: record.content,
+            id: record.id,
           },
         });
       }
