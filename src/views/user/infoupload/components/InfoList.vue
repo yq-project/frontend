@@ -1,6 +1,5 @@
 <template>
   <BasicTable
-    title="我的信息"
     :columns="columns"
     :dataSource="data"
     :loading="loading"

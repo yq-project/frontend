@@ -1,6 +1,10 @@
 <template>
   <PageWrapper class="high-form" title="舆情信息填写">
-    <a-card title="信息填写" :bordered="false">
+    <template #extra>
+      <a-button @click="cancel"> 返回 </a-button>
+      <a-button type="primary" @click="submitAll"> 提交 </a-button>
+    </template>
+    <a-card :bordered="false">
       <BasicForm @register="register" />
     </a-card>
 
@@ -14,10 +18,6 @@
         :accept="['png', 'jpg', 'jpeg']"
       />
     </a-card>
-
-    <template #rightFooter>
-      <a-button type="primary" @click="submitAll"> 提交 </a-button>
-    </template>
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -37,7 +37,7 @@
     components: { BasicForm, BasicUpload, PageWrapper, [Card.name]: Card },
     setup() {
       const imageList = ref([]);
-      const router=useRouter();
+      const router = useRouter();
       const [register, { validate }] = useForm({
         layout: 'vertical',
         schemas: schemas,
@@ -55,12 +55,15 @@
           createMessage.error('未上传截图');
         }
       }
+      const cancel = () => {
+        router.push('/user/infomanage/upload');
+      };
       const { createMessage } = useMessage();
       const handleChange = (list: string[]) => {
         imageList.value = list;
         createMessage.info(`截图已保存`);
       };
-      return { submitAll, register, uploadApi, handleChange, imageList };
+      return { submitAll, register, uploadApi, handleChange, cancel, imageList };
     },
   });
 </script>

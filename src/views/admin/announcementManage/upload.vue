@@ -1,9 +1,6 @@
 <template>
   <PageWrapper class="high-form" title="发布公告">
-    <a-card title="公告信息" :bordered="false">
-      <BasicForm @register="registerTask" />
-    </a-card>
-    <a-card title="公告正文" :bordered="false" class="!mt-5">
+    <CollapseContainer title="公告内容">
       <BasicForm
         :labelWidth="100"
         :schemas="schemas"
@@ -11,34 +8,40 @@
         :baseColProps="{ span: 24 }"
         @submit="handleSubmit"
       />
-    </a-card>
-
-    <template #rightFooter>
-      <a-button type="primary" @click="submitAll"> 提交 </a-button>
-    </template>
+    </CollapseContainer>
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { BasicForm, useForm, FormSchema } from '/@/components/Form';
+  import { BasicForm, FormSchema } from '/@/components/Form';
   import { defineComponent, ref, h } from 'vue';
   import { PageWrapper } from '/@/components/Page';
-  import { taskSchemas } from './data';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { Tinymce } from '/@/components/Tinymce/index';
   import { Card } from 'ant-design-vue';
-  import { uploadApi } from '/@/api/sys/upload';
+  import { CollapseContainer } from '/@/components/Container/index';
+  import { CreateBroadcastApi } from '/@/api/demo/admin';
+  import { useRoute, useRouter } from 'vue-router';
 
   export default defineComponent({
     name: 'FormHightPage',
-    components: { BasicForm, PageWrapper, [Card.name]: Card },
+    components: { BasicForm, PageWrapper, [Card.name]: Card, CollapseContainer },
     setup() {
+      const route = useRoute();
+      const router = useRouter();
       const tableRef = ref<{ getDataSource: () => any } | null>(null);
       const schemas: FormSchema[] = [
         {
-          field: 'tinymce',
+          field: 'title',
+          component: 'Input',
+          label: '公告标题',
+          defaultValue: route.query.title,
+          rules: [{ required: true }],
+        },
+        {
+          field: 'content',
           component: 'Input',
           label: '正文内容',
-          defaultValue: 'defaultValue',
+          defaultValue: route.query.content,
           rules: [{ required: true }],
           render: ({ model, field }) => {
             return h(Tinymce, {
@@ -49,36 +52,20 @@
             });
           },
         },
-        {
-          field: 'field1',
-          component: 'Upload',
-          label: '上传附件',
-          rules: [{ required: false, message: '请选择上传文件' }],
-          componentProps: {
-            api: uploadApi,
-          },
-        },
       ];
 
-      const [registerTask] = useForm({
-        layout: 'vertical',
-        baseColProps: {
-          span: 6,
-        },
-        schemas: taskSchemas,
-        showActionButtonGroup: false,
-      });
-
-      async function submitAll() {
-        createMessage.info('提交成功！');
-      }
-
       const { createMessage } = useMessage();
-      function handleSubmit(values: any) {
-        createMessage.success('click search,values:' + JSON.stringify(values));
+      async function handleSubmit(values: any) {
+        console.log(values);
+        const data = await CreateBroadcastApi(values);
+        console.log(data);
+        createMessage.info('上传成功！');
+        router.push({
+          path: '/announcement/updateAnnouncement',
+        });
       }
 
-      return { schemas, registerTask, submitAll, tableRef, handleSubmit };
+      return { schemas, tableRef, handleSubmit };
     },
   });
 </script>

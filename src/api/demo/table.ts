@@ -1,6 +1,6 @@
-import {basicHttp, defHttp} from '/@/utils/http/axios';
-import {DemoListGetResultModel, DemoParams} from './model/tableModel';
-import {ErrorMessageMode} from "/#/axios";
+import { defHttp, basicHttp, authHttp } from '/@/utils/http/axios';
+import { DemoParams, DemoListGetResultModel } from './model/tableModel';
+import { ErrorMessageMode } from '/#/axios';
 
 enum Api {
   DEMO_LIST = '/table/getDemoList',
@@ -9,6 +9,7 @@ enum Api {
   INFO_LIST2 = '/info',
   COMMENT_TASK_LIST = '/comment_task/?format=json',
   PROCESS_TASK_LIST = '/process_task',
+  USER_LIST = '/user/?format=json',
 }
 
 /**
@@ -149,4 +150,16 @@ export function commentTaskListApi(mode: ErrorMessageMode = 'modal') {
       errorMessageMode: mode,
     },
   );
+}
+
+export function userListApi(mode: ErrorMessageMode = 'modal') {
+  const response = authHttp.get(
+    {
+      url: Api.USER_LIST,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+  return response;
 }

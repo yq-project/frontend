@@ -1,69 +1,91 @@
 <template>
-  <PageWrapper title="通知公告">
+  <div class="p-4">
     <BasicTable @register="registerTable">
-      <template #expandedRowRender="{ record }">
-        <span>No: {{ record.no }} </span>
-      </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
           <TableAction
             stopButtonPropagation
             :actions="[
               {
-                label: '删除',
-                icon: 'ic:outline-delete-outline',
-                onClick: handleDelete.bind(null, record),
-              },
-              {
                 label: '编辑',
                 icon: 'material-symbols:edit-document-outline',
-                onClick: handleDelete.bind(null, record), //popConfirm
+                onClick: handleEdit.bind(null, record),
+              },
+              {
+                label: '删除',
+                icon: 'ic:outline-delete-outline',
+                popConfirm: {
+                  title: '是否确认删除',
+                  placement: 'left',
+                  confirm: handleDelete.bind(null, record),
+                },
               },
             ]"
           />
         </template>
       </template>
     </BasicTable>
-  </PageWrapper>
+  </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { PageWrapper } from '/@/components/Page';
   import { getBasicColumns } from './tableData';
-
-  import { demoListApi2 } from '/@/api/demo/table';
+  import { broadcastListApi, DeleteBroadcastApi } from '/@/api/demo/admin';
+  import { useMessage } from '/@/hooks/web/useMessage';
+  import { useRouter } from 'vue-router';
 
   export default defineComponent({
-    components: { BasicTable, TableAction, PageWrapper },
+    components: { BasicTable, TableAction },
     setup() {
+      const router = useRouter();
+      const data = ref([]);
+      const updateBroadcastList = () => {
+        broadcastListApi().then((res) => {
+          data.value = res.results;
+          console.log(data.value);
+        });
+      };
+      updateBroadcastList();
       const [registerTable] = useTable({
-        api: demoListApi2,
-        // title: '可展开表格演示',
-        // titleHelpMessage: ['已启用expandRowByClick', '已启用stopButtonPropagation'],
+        title: '公告管理',
+        dataSource: data,
         columns: getBasicColumns(),
         rowKey: 'id',
-        canResize: false,
-        expandRowByClick: true,
+        showIndexColumn: false,
+        showTableSetting: true,
         actionColumn: {
-          width: 160,
+          width: 200,
           title: 'Action',
           dataIndex: 'action',
           fixed: 'right',
           // slots: { customRender: 'action' },
         },
       });
-      function handleDelete(record: Recordable) {
-        console.log('点击了删除', record);
+      const { createMessage } = useMessage();
+      async function handleDelete(record: Recordable) {
+        try {
+          await DeleteBroadcastApi(record.id);
+        } catch (err) {
+          updateBroadcastList();
+        }
+        createMessage.info('删除成功！');
       }
-      function handleOpen(record: Recordable) {
-        console.log('点击了启用', record);
+      function handleEdit(record: Recordable) {
+        console.log(record);
+        router.push({
+          path: '/announcement/uploadAnnouncement',
+          query: {
+            title: record.title,
+            content: record.content,
+          },
+        });
       }
 
       return {
         registerTable,
         handleDelete,
-        handleOpen,
+        handleEdit,
       };
     },
   });

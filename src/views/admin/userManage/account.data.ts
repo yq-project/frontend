@@ -1,4 +1,3 @@
-import { getAllRoleList, isAccountExist } from '/@/api/demo/system';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 
@@ -51,77 +50,55 @@ export const searchFormSchema: FormSchema[] = [
 
 export const accountFormSchema: FormSchema[] = [
   {
-    field: 'account',
+    field: 'name',
     label: '用户名',
     component: 'Input',
-    helpMessage: ['本字段演示异步验证', '不能输入带有admin的用户名'],
-    rules: [
-      {
-        required: true,
-        message: '请输入用户名',
-      },
-      {
-        validator(_, value) {
-          return new Promise((resolve, reject) => {
-            isAccountExist(value)
-              .then(() => resolve())
-              .catch((err) => {
-                reject(err.message || '验证失败');
-              });
-          });
-        },
-      },
-    ],
+    required: true,
   },
   {
-    field: 'pwd',
-    label: '密码',
-    component: 'InputPassword',
+    field: 'number',
+    label: '学号',
+    component: 'Input',
     required: true,
-    ifShow: false,
   },
   {
     label: '角色',
     field: 'role',
-    component: 'ApiSelect',
+    component: 'Select',
     componentProps: {
-      api: getAllRoleList,
-      labelField: 'roleName',
-      valueField: 'roleValue',
+      options: [
+        {
+          label: '管理员',
+          value: 0,
+        },
+        {
+          label: '普通用户',
+          value: 1,
+        },
+        {
+          label: '学院领导',
+          value: 2,
+        },
+      ],
     },
     required: true,
   },
   {
-    field: 'dept',
+    field: 'department',
     label: '所属部门',
-    component: 'TreeSelect',
+    component: 'Select',
     componentProps: {
-      fieldNames: {
-        label: 'deptName',
-        key: 'id',
-        value: 'id',
-      },
-      getPopupContainer: () => document.body,
+      options: [
+        {
+          label: '网宣办',
+          value: 'wxb',
+        },
+        {
+          label: '电院',
+          value: 'dy',
+        },
+      ],
     },
     required: true,
-  },
-  {
-    field: 'nickname',
-    label: '昵称',
-    component: 'Input',
-    required: true,
-  },
-
-  {
-    label: '邮箱',
-    field: 'email',
-    component: 'Input',
-    required: true,
-  },
-
-  {
-    label: '备注',
-    field: 'remark',
-    component: 'InputTextArea',
   },
 ];
