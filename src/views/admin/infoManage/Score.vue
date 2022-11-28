@@ -9,18 +9,14 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, h } from 'vue';
+  import { defineComponent, onBeforeMount, ref } from 'vue';
   import { BasicTable, useTable, BasicColumn } from '/@/components/Table';
-  import { optionsListApi } from '/@/api/demo/select';
-
-  import { demoListApi } from '/@/api/demo/table';
-  import { treeOptionsListApi } from '/@/api/demo/tree';
+  import { infoListApi } from '/@/api/demo/table';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { Progress } from 'ant-design-vue';
   const columns: BasicColumn[] = [
     {
       title: '舆情主题',
-      dataIndex: 'content',
+      dataIndex: 'subject',
       editRow: true,
       editComponentProps: {
         prefix: '$',
@@ -31,11 +27,11 @@
       title: '上传时间',
       width: 150,
       sorter: true,
-      dataIndex: 'beginTime',
+      dataIndex: 'created_at',
     },
     {
       title: '上传用户',
-      dataIndex: 'name',
+      dataIndex: 'creator',
       width: 150,
       filters: [
         { text: 'Male', value: 'male' },
@@ -44,11 +40,15 @@
     },
     {
       title: '当前评分',
-      dataIndex: 'radioScore',
+      dataIndex: 'score',
       edit: true,
       editComponent: 'RadioGroup',
       editComponentProps: {
         options: [
+          {
+            label: '0',
+            value: '0',
+          },
           {
             label: '1',
             value: '1',
@@ -77,10 +77,14 @@
   export default defineComponent({
     components: { BasicTable },
     setup() {
+      const data = ref([]);
+      infoListApi().then((res) => {
+        data.value = res.results;
+      });
       const [registerTable] = useTable({
         title: '舆情评分页',
-        api: demoListApi,
         columns: columns,
+        dataSource: data,
         showIndexColumn: false,
         bordered: true,
       });
@@ -93,9 +97,9 @@
       }
 
       // 模拟将指定数据保存
-      function feakSave({ value, key, id }) {
+      function feakSave(id, value) {
         createMessage.loading({
-          content: `正在模拟保存${key}`,
+          content: `正在保存`,
           key: '_save_fake_data',
           duration: 0,
         });
@@ -109,11 +113,11 @@
               });
               resolve(false);
             } else {
-              createMessage.success({
-                content: `记录${id}的${key}已保存`,
-                key: '_save_fake_data',
-                duration: 2,
-              });
+              // createMessage.success({
+              //   content: `记录${id}的${key}已保存`,
+              //   key: '_save_fake_data',
+              //   duration: 2,
+              // });
               resolve(true);
             }
           }, 2000);
@@ -122,7 +126,7 @@
 
       async function beforeEditSubmit({ record, index, key, value }) {
         console.log('单元格数据正在准备提交', { record, index, key, value });
-        return await feakSave({ id: record.id, key, value });
+        return await feakSave(record.id, value);
       }
 
       function handleEditCancel() {
@@ -130,6 +134,7 @@
       }
 
       return {
+        data,
         registerTable,
         handleEditEnd,
         handleEditCancel,

@@ -5,7 +5,7 @@
     </a-card>
 
     <a-card title="截图上传" :bordered="false">
-        
+
     </a-card>
 
     <template #rightFooter>

@@ -1,9 +1,9 @@
 <template>
   <div class="p-4">
     <BasicTable @register="registerTable">
-      <template #bodyCell="{ column }">
+      <template #bodyCell="{ column, record }">
         <template v-if="column.key === '操作'">
-          <a-button class="mr-2" @click="goToDetail"> 查看详情 </a-button>
+          <a-button class="mr-2" @click="goToDetail(record.id)"> 查看详情 </a-button>
         </template>
       </template>
     </BasicTable>
@@ -13,8 +13,8 @@
   import { defineComponent, onBeforeMount, ref } from 'vue';
   import { BasicTable, useTable, BasicColumn } from '/@/components/Table';
 
-  import { infoListApi } from '/@/api/demo/table';
-  import { router } from '/@/router';
+  import { infoApi, infoListApi, processTaskApi } from '/@/api/demo/table';
+  import { useRouter } from 'vue-router';
 
   const columns: BasicColumn[] = [
     {
@@ -64,17 +64,34 @@
   export default defineComponent({
     components: { BasicTable },
     setup() {
+      const router = useRouter();
       const data = ref([]);
-      onBeforeMount(async () => {
-        const res = await infoListApi();
+      infoListApi().then((res) => {
+        res.results.forEach((item) => {
+          switch (item.state) {
+            case 0:
+              item.state = '待老师审核';
+              break;
+            case 1:
+              item.state = '待学生重新提交';
+              break;
+            case 2:
+              item.state = '审核通过';
+              break;
+            case 3:
+              item.state = '老师终止流程';
+              break;
+            case 4:
+              item.state = '学生撤回上传信息';
+              break;
+          }
+        });
         data.value = res.results;
       });
-      console.log(data);
       const [registerTable] = useTable({
         title: '舆情信息列表',
         titleHelpMessage: ['以列表的形式展示所有的舆情信息'],
         columns: columns,
-        // api: demoListApi,
         dataSource: data,
         showIndexColumn: false,
         showTableSetting: true,
@@ -87,8 +104,14 @@
         },
       });
 
-      function goToDetail() {
-        router.push('/infoManage/infoDetail');
+      function goToDetail(id) {
+        // console.log(id);
+        router.push({
+          path: '/infoManage/infoDetail',
+          query: {
+            infoId: id,
+          },
+        });
       }
 
       return {

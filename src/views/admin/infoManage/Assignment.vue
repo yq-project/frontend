@@ -3,7 +3,7 @@
     <BasicTable @register="registerTable" @edit-change="onEditChange">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === '操作'">
-          <template v-if="record.status_info === '未审核'">
+          <template v-if="record.status === '未审核'">
             <a-button class="mr-2" @click="goToDetail"> 前往审核 </a-button>
           </template>
           <template v-else>
@@ -15,16 +15,16 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, onBeforeMount, ref } from 'vue';
   import { BasicTable, useTable, BasicColumn } from '/@/components/Table';
 
-  import { demoListApi } from '/@/api/demo/table';
+  import { commentTaskListApi } from '/@/api/demo/table';
   import { useRouter } from 'vue-router';
 
   const columns: BasicColumn[] = [
     {
       title: '舆情主题',
-      dataIndex: 'content',
+      dataIndex: 'subject',
       editRow: true,
       editComponentProps: {
         prefix: '$',
@@ -33,13 +33,13 @@
     },
     {
       title: '上传时间',
-      dataIndex: 'beginTime',
+      dataIndex: 'created_at',
       editRow: true,
       width: 150,
     },
     {
       title: '上传用户',
-      dataIndex: 'name',
+      dataIndex: 'creator',
       width: 150,
     },
     {
@@ -50,24 +50,30 @@
     {
       title: '涉及单位',
       width: 150,
-      dataIndex: 'content',
+      dataIndex: 'department',
     },
     {
       title: '当前状态',
       width: 150,
       sorter: true,
-      dataIndex: 'status_info',
+      dataIndex: 'status',
     },
   ];
   export default defineComponent({
     components: { BasicTable },
     setup() {
       const router = useRouter();
+      const data = ref([]);
+      onBeforeMount(async () => {
+        const res = await commentTaskListApi();
+        data.value = res.results;
+      });
+      console.log(data);
       const [registerTable] = useTable({
         title: '网评任务分配页',
         titleHelpMessage: ['以列表的形式展示所有舆情信息'],
-        api: demoListApi,
         columns: columns,
+        dataSource: data,
         showIndexColumn: false,
         showTableSetting: true,
         tableSetting: { fullScreen: true },
@@ -84,6 +90,7 @@
       }
 
       return {
+        data,
         goToDetail,
         registerTable,
       };
