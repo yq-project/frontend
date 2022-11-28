@@ -9,11 +9,11 @@ export function getBasicColumns(): BasicColumn[] {
       fixed: 'left',
       width: 100,
     },
-    // {
-    //   title: '上传者',
-    //   dataIndex: 'creator',
-    //   width: 150,
-    // },
+    {
+      title: '上传者',
+      dataIndex: 'creator',
+      width: 150,
+    },
     {
       title: '标题',
       dataIndex: 'title',
