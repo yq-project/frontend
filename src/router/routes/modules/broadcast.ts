@@ -19,7 +19,7 @@ const dashboard: AppRouteModule = {
     {
       path: 'index',
       name: 'Broadcast',
-      component: () => import('/@/views/common/broadcasts/index.vue'),
+      component: () => import('/@/views/user/broadcasts/index.vue'),
       meta: {
         title: '通知公告',
         icon: 'icon-park-outline:blackboard',

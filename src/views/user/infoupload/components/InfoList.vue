@@ -14,7 +14,7 @@
     },
     {
       title: '发布时间',
-      width: 150,
+      width: 250,
       dataIndex: 'created_at',
     },
     {
@@ -42,6 +42,11 @@
     getInfoListApi(page).then((res) => {
       res.results.forEach((item) => {
         item.state = stateMap.get(item.state);
+        let date = new Date(item.created_at);
+        let format = `${date.getFullYear()}年${
+          date.getMonth() + 1
+        }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
+        item.created_at = format;
       });
       count.value = res.count;
       data.value = res.results;
