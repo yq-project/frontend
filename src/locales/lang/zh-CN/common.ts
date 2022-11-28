@@ -7,7 +7,7 @@ export default {
   delText: '删除',
   resetText: '重置',
   searchText: '搜索',
-  queryText: '查询',
+  queryText: '提交',
 
   inputText: '请输入',
   chooseText: '请选择',
