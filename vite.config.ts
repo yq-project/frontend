@@ -73,6 +73,14 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
             return path;
           },
         },
+        '/upload': {
+          target: 'https://shuiyuanbeta.sjtu.edu.cn',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => {
+            return 'uploads.json';
+          },
+        },
       },
     },
     build: {

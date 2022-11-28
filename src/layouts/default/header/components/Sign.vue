@@ -25,7 +25,11 @@
       const userStore = useUserStore();
       const showSign = computed(() => {
         const { role } = userStore.getUserInfo;
-        return role[0].value == 'user';
+        if (role && role.length == 1) {
+          return role[0].value == 'user';
+        } else {
+          return false;
+        }
       });
       return {
         showSign,

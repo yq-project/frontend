@@ -3,46 +3,50 @@ import { FormSchema } from '/@/components/Form';
 const departmentOptions: LabelValueOptions = [
   {
     label: '电院',
-    value: '1',
+    value: '电院',
   },
   {
     label: '后勤',
-    value: '2',
+    value: '后勤',
   },
 ];
 
 const TypeOptions: LabelValueOptions = [
   {
     label: '生活',
-    value: '1',
+    value: '生活',
   },
   {
     label: '科研',
-    value: '2',
+    value: '科研',
+  },
+  {
+    label: '疫情',
+    value: '疫情',
   },
 ];
 
 export const schemas: FormSchema[] = [
   {
-    field: 'f1',
+    field: 'subject',
     component: 'Input',
     label: '主题',
     required: true,
   },
   {
-    field: 'f2',
+    field: 'content',
     component: 'InputTextArea',
     label: '内容',
     required: true,
   },
   {
-    field: 'f3',
-    component: 'Select',
+    field: 'infoUrl',
+    component: 'Input',
     label: '链接',
     required: true,
   },
   {
-    field: 'f4',
+    field: 'department',
     component: 'Select',
     label: '涉及单位',
     componentProps: {
@@ -51,7 +55,7 @@ export const schemas: FormSchema[] = [
     required: true,
   },
   {
-    field: 'f5',
+    field: 'infoType',
     component: 'Select',
     label: '信息种类',
     componentProps: {
