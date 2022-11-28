@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper class="high-form" title="舆情信息填写">
+  <PageWrapper title="舆情信息填写">
     <template #extra>
       <a-button @click="cancel"> 返回 </a-button>
       <a-button type="primary" @click="submitAll"> 提交 </a-button>
@@ -68,7 +68,4 @@
   });
 </script>
 <style lang="less" scoped>
-  .high-form {
-    padding-bottom: 48px;
-  }
 </style>
