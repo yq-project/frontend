@@ -31,17 +31,22 @@
         </ImpExcel>
       </template> </BasicTable
     >>
-    <AccountModal @register="registerModal" @success="handleSuccess" />
+    <AccountModal
+      @register="registerModal"
+      @success="handleSuccess"
+      :updateUserList="updateUserList"
+    />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { ImpExcel, ExcelData } from '/@/components/Excel';
   import { BasicTable, useTable, BasicColumn, TableAction } from '/@/components/Table';
-  import { demoListApi } from '/@/api/demo/table';
+  import { userListApi } from '/@/api/demo/table';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useModal } from '/@/components/Modal';
   import AccountModal from './AccountModal.vue';
+  import { DeleteUserApi } from '/@/api/demo/admin';
   const columns: BasicColumn[] = [
     {
       title: 'ID',
@@ -81,7 +86,7 @@
     },
     {
       title: '学/工号',
-      dataIndex: 'userId',
+      dataIndex: 'number',
       width: 150,
       sorter: true,
     },
@@ -95,9 +100,30 @@
   export default defineComponent({
     components: { BasicTable, TableAction, ImpExcel, AccountModal },
     setup() {
+      const data = ref([]);
+      const updateUserList = () => {
+        userListApi().then((res) => {
+          res.results.forEach((item) => {
+            switch (item.role) {
+              case 0:
+                item.role = '管理员';
+                break;
+              case 1:
+                item.role = '普通用户';
+                break;
+              case 2:
+                item.role = '学院领导';
+                break;
+            }
+          });
+          data.value = res.results;
+          console.log(data.value);
+        });
+      };
+      updateUserList();
       const [registerTable, { reload, updateTableDataRecord }] = useTable({
         title: '用户管理',
-        api: demoListApi,
+        dataSource: data,
         columns: columns,
         showIndexColumn: false,
         showTableSetting: true,
@@ -114,14 +140,18 @@
       const { createMessage } = useMessage();
       const [registerModal, { openModal }] = useModal();
 
-      function handleDelete(record: Recordable) {
-        createMessage.info('删除成功！');
-        console.log('点击了删除', record);
-      }
       function loadDataSuccess(excelDataList: ExcelData[]) {
         console.log(excelDataList);
         createMessage.info('导入成功！');
       }
+      const handleDelete = async (record: Recordable) => {
+        try {
+          await DeleteUserApi(record.id);
+        } catch (err) {
+          updateUserList();
+        }
+        createMessage.info('删除成功！');
+      };
       function userLoading() {
         openModal(true, {
           isUpdate: false,
@@ -152,6 +182,7 @@
         registerModal,
         handleSuccess,
         handleEdit,
+        updateUserList,
       };
     },
   });
