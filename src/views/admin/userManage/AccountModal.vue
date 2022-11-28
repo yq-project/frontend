@@ -1,24 +1,30 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="registerModal" :title="getTitle" @ok="handleSubmit">
+  <BasicModal v-bind="$attrs" @register="registerModal" title="新增用户" @ok="handleSubmit">
     <BasicForm @register="registerForm" />
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, computed, unref } from 'vue';
+  import { defineComponent, ref, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { accountFormSchema } from './account.data';
-  import { getDeptList } from '/@/api/demo/system';
+  import { CreateUserApi, UpdateUserApi } from '/@/api/demo/admin';
+  import { useMessage } from '/@/hooks/web/useMessage';
 
   export default defineComponent({
     name: 'AccountModal',
     components: { BasicModal, BasicForm },
-    emits: ['success', 'register'],
-    setup(_, { emit }) {
+    props: {
+      updateUserList: {
+        type: Function,
+      },
+    },
+    //emits: ['success', 'register'],
+    setup(props) {
       const isUpdate = ref(true);
       const rowId = ref('');
 
-      const [registerForm, { setFieldsValue, updateSchema, resetFields, validate }] = useForm({
+      const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
         labelWidth: 100,
         baseColProps: { span: 24 },
         schemas: accountFormSchema,
@@ -39,36 +45,34 @@
             ...data.record,
           });
         }
-
-        const treeData = await getDeptList();
-        updateSchema([
-          {
-            field: 'pwd',
-            show: !unref(isUpdate),
-          },
-          {
-            field: 'dept',
-            componentProps: { treeData },
-          },
-        ]);
       });
 
-      const getTitle = computed(() => (!unref(isUpdate) ? '新增账号' : '编辑账号'));
+      const { createMessage } = useMessage();
 
       async function handleSubmit() {
         try {
           const values = await validate();
           setModalProps({ confirmLoading: true });
-          // TODO custom api
           console.log(values);
+          if (unref(isUpdate)) {
+            const data = await UpdateUserApi(values, rowId.value);
+            console.log(data);
+            props.updateUserList();
+            createMessage.info('更新成功！');
+          } else {
+            const data = await CreateUserApi(values);
+            console.log(data);
+            props.updateUserList();
+            createMessage.info('新建成功！');
+          }
           closeModal();
-          emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: rowId.value } });
+          //emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: rowId.value } });
         } finally {
           setModalProps({ confirmLoading: false });
         }
       }
 
-      return { registerModal, registerForm, getTitle, handleSubmit };
+      return { registerModal, registerForm, handleSubmit };
     },
   });
 </script>

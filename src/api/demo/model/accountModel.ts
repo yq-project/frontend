@@ -1,7 +1,6 @@
-export interface GetAccountInfoModel {
-  email: string;
+export interface AccountParams {
   name: string;
-  introduction: string;
-  phone: string;
-  address: string;
+  number: string;
+  role: number;
+  department: string;
 }

@@ -2,34 +2,35 @@
   <div class="p-4">
     <BasicTable @register="registerTable">
       <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'state' && record.state === '在线'">
-          <Tag color="green">
-            {{ record.state }}
-          </Tag>
+        <template v-if="column.key === 'online' && record.online === true">
+          <Tag color="green"> 在线 </Tag>
         </template>
-        <template v-if="column.key === 'state' && record.state === '离线'">
-          <Tag color="red">
-            {{ record.state }}
-          </Tag>
+        <template v-if="column.key === 'online' && record.online === false">
+          <Tag color="red"> 离线 </Tag>
         </template>
       </template>
     </BasicTable>
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, onBeforeMount, ref } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { BasicColumn } from '/@/components/Table/src/types/table';
-  import { demoListApi } from '/@/api/demo/table';
+  import { userListApi } from '/@/api/demo/table';
   import { Tag } from 'ant-design-vue';
 
   export default defineComponent({
     components: { BasicTable, Tag },
     setup() {
+      const data = ref([]);
+      onBeforeMount(async () => {
+        const res = await userListApi();
+        data.value = res.results;
+      });
       const [registerTable] = useTable({
         canResize: true,
         title: '用户列表',
-        api: demoListApi,
+        dataSource: data,
         columns: getBasicColumns(),
         defSort: {
           field: 'name',
@@ -69,10 +70,10 @@
           {
             title: '当前状态',
             width: 150,
-            dataIndex: 'state',
+            dataIndex: 'online',
             filters: [
-              { text: '在线', value: 'online' },
-              { text: '离线', value: 'offline' },
+              { text: '在线', value: 'true' },
+              { text: '离线', value: 'false' },
             ],
           },
         ];
