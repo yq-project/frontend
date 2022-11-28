@@ -25,10 +25,12 @@
       const data = ref([]);
       onBeforeMount(async () => {
         const res = await userListApi();
-        res.results.forEach((item) => {
-          item.uploadInfoNum = (Math.random() * 50).toFixed(2);
-          item.uploadInfoScore = (Math.random() * 5).toFixed(2);
-        });
+        for (var i = 0; i < res.results.length; i++) {
+          if (res.results[i].role != 1) {
+            res.results.splice(i, 1);
+          }
+        }
+        console.log(res.results);
         data.value = res.results;
       });
       const [registerTable] = useTable({
@@ -61,13 +63,13 @@
           },
           {
             title: '上传信息数量',
-            dataIndex: 'uploadInfoNum',
+            dataIndex: 'info_count',
             width: 150,
             sorter: true,
           },
           {
             title: '上传信息平均得分',
-            dataIndex: 'uploadInfoScore',
+            dataIndex: 'info_avg',
             width: 150,
             sorter: true,
           },
