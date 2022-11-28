@@ -72,3 +72,10 @@ export function DeleteBroadcastApi(id, mode: ErrorMessageMode = 'modal') {
     },
   );
 }
+
+export function UpdateBroadcastApi(params: AccountParams, id) {
+  return basicHttp.put({
+    url: Api.BROADCAST + id + '/',
+    params,
+  });
+}

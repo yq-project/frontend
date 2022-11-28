@@ -101,8 +101,8 @@
     components: { BasicTable, TableAction, ImpExcel, AccountModal },
     setup() {
       const data = ref([]);
-      const updateUserList = () => {
-        userListApi().then((res) => {
+      const updateUserList = (currentPage) => {
+        userListApi(currentPage).then((res) => {
           res.results.forEach((item) => {
             switch (item.role) {
               case 0:
@@ -118,25 +118,39 @@
           });
           data.value = res.results;
           console.log(data.value);
+          setPagination({
+            total: res.count,
+            showSizeChanger: false,
+            pageSize: 10,
+          });
         });
       };
-      updateUserList();
-      const [registerTable, { reload, updateTableDataRecord }] = useTable({
-        title: '用户管理',
-        dataSource: data,
-        columns: columns,
-        showIndexColumn: false,
-        showTableSetting: true,
-        bordered: true,
-        actionColumn: {
-          width: 200,
-          title: 'Action',
-          dataIndex: 'action',
-          fixed: 'right',
-          // slots: { customRender: 'action' },
-        },
-      });
+      const [registerTable, { reload, updateTableDataRecord, setPagination, getPaginationRef }] =
+        useTable({
+          title: '用户管理',
+          dataSource: data,
+          columns: columns,
+          showIndexColumn: false,
+          showTableSetting: true,
+          bordered: true,
+          actionColumn: {
+            width: 200,
+            title: 'Action',
+            dataIndex: 'action',
+            fixed: 'right',
+            // slots: { customRender: 'action' },
+          },
+          pagination: {
+            //@ts-ignore
+            onChange: pageChange,
+          },
+        });
+      function pageChange(currentPage) {
+        //console.log(getPaginationRef().current);
+        updateUserList(currentPage);
+      }
 
+      updateUserList(1);
       const { createMessage } = useMessage();
       const [registerModal, { openModal }] = useModal();
 
@@ -148,13 +162,14 @@
         try {
           await DeleteUserApi(record.id);
         } catch (err) {
-          updateUserList();
+          updateUserList(1);
         }
         createMessage.info('删除成功！');
       };
       function userLoading() {
         openModal(true, {
           isUpdate: false,
+          currentPage: getPaginationRef().current,
         });
       }
       function handleSuccess({ isUpdate, values }) {
@@ -172,6 +187,7 @@
         openModal(true, {
           record,
           isUpdate: true,
+          currentPage: getPaginationRef().current,
         });
       }
       return {

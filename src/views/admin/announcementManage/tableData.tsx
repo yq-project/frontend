@@ -9,11 +9,11 @@ export function getBasicColumns(): BasicColumn[] {
       fixed: 'left',
       width: 100,
     },
-    // {
-    //   title: '上传者',
-    //   dataIndex: 'creator',
-    //   width: 150,
-    // },
+    {
+      title: '上传者',
+      dataIndex: 'creator',
+      width: 150,
+    },
     {
       title: '标题',
       dataIndex: 'title',
@@ -25,12 +25,12 @@ export function getBasicColumns(): BasicColumn[] {
       sorter: true,
       dataIndex: 'created_at',
     },
-    {
-      title: '更新时间',
-      width: 150,
-      sorter: true,
-      dataIndex: 'updated_at',
-    },
+    // {
+    //   title: '更新时间',
+    //   width: 150,
+    //   sorter: true,
+    //   dataIndex: 'updated_at',
+    // },
   ];
 }
 

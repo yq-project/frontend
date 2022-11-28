@@ -19,7 +19,7 @@
   import { Tinymce } from '/@/components/Tinymce/index';
   import { Card } from 'ant-design-vue';
   import { CollapseContainer } from '/@/components/Container/index';
-  import { CreateBroadcastApi } from '/@/api/demo/admin';
+  import { CreateBroadcastApi, UpdateBroadcastApi } from '/@/api/demo/admin';
   import { useRoute, useRouter } from 'vue-router';
 
   export default defineComponent({
@@ -57,8 +57,11 @@
       const { createMessage } = useMessage();
       async function handleSubmit(values: any) {
         console.log(values);
-        const data = await CreateBroadcastApi(values);
-        console.log(data);
+        if (route.query.id != null) {
+          await UpdateBroadcastApi(values, route.query.id);
+        } else {
+          await CreateBroadcastApi(values);
+        }
         createMessage.info('上传成功！');
         router.push({
           path: '/announcement/updateAnnouncement',
