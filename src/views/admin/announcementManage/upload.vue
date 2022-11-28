@@ -62,7 +62,6 @@
 
       const { createMessage } = useMessage();
       async function handleSubmit(values: any) {
-        console.log(values);
         if (route.query.id != null) {
           await UpdateBroadcastApi(values, route.query.id);
         } else {
