@@ -68,23 +68,35 @@
       ] as BasicColumn[];
       const data = ref([]);
       const count = ref(0);
-      const [registerTable] = useTable({
+      const [registerTable, { setLoading, setPagination, getPaginationRef }] = useTable({
         dataSource: data,
         columns: tableColumns,
         rowKey: 'id',
-        canResize: false,
         actionColumn: actionColumn as BasicColumn,
+        pagination: {
+          //ts
+          onChange: pageChange,
+        },
       });
-      const getBroadcastList = () => {
-        getBroadcastListApi().then((res) => {
+      function pageChange(currentPage, pageSize) {
+        getBroadcastList(currentPage);
+      }
+
+      const getBroadcastList = (pageIndex) => {
+        getBroadcastListApi(pageIndex).then((res) => {
           res.results.forEach((item) => {
             item.creator = '管理员';
           });
           count.value = res.count;
           data.value = res.results;
+          setPagination({
+            total: res.count,
+            showSizeChanger: false,
+            pageSize: 10,
+          });
         });
       };
-      getBroadcastList();
+      getBroadcastList(1);
 
       function handleDelete(record: Recordable) {
         console.log('点击了删除', record);
