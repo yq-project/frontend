@@ -68,17 +68,17 @@
       ] as BasicColumn[];
       const data = ref([]);
       const count = ref(0);
-      const [registerTable, { setLoading, setPagination, getPaginationRef }] = useTable({
+      const [registerTable, { setPagination }] = useTable({
         dataSource: data,
         columns: tableColumns,
         rowKey: 'id',
         actionColumn: actionColumn as BasicColumn,
         pagination: {
-          //ts
+          //@ts-ignore
           onChange: pageChange,
         },
       });
-      function pageChange(currentPage, pageSize) {
+      function pageChange(currentPage, _pageSize) {
         getBroadcastList(currentPage);
       }
 
@@ -86,6 +86,11 @@
         getBroadcastListApi(pageIndex).then((res) => {
           res.results.forEach((item) => {
             item.creator = '管理员';
+            let date = new Date(item.created_at);
+            let format = `${date.getFullYear()}年${
+              date.getMonth() + 1
+            }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
+            item.created_at = format;
           });
           count.value = res.count;
           data.value = res.results;
