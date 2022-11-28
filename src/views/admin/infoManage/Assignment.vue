@@ -70,7 +70,7 @@
       });
       console.log(data);
       const [registerTable] = useTable({
-        title: '网评任务分配页',
+        title: '网评任务页',
         titleHelpMessage: ['以列表的形式展示所有舆情信息'],
         columns: columns,
         dataSource: data,

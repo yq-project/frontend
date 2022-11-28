@@ -46,6 +46,17 @@ export function infoListApi(mode: ErrorMessageMode = 'modal') {
   );
 }
 
+export function processTaskListApi(mode: ErrorMessageMode = 'modal') {
+  return basicHttp.get(
+    {
+      url: Api.PROCESS_TASK_LIST,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
 // interface infoDetailParam {
 //   infoId: number;
 // }
@@ -65,6 +76,18 @@ export function infoCloseApi(param, mode: ErrorMessageMode = 'modal') {
   return basicHttp.post(
     {
       url: Api.INFO_LIST2 + '/' + param + '/close/?format=json',
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+export function infoScoreApi(id, params, mode: ErrorMessageMode = 'modal') {
+  return basicHttp.put(
+    {
+      url: Api.INFO_LIST2 + '/' + id + '/score/?format=json',
+      params,
     },
     {
       errorMessageMode: mode,

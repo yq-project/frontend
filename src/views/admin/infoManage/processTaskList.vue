@@ -13,7 +13,7 @@
   import { defineComponent, ref } from 'vue';
   import { BasicTable, useTable, BasicColumn } from '/@/components/Table';
 
-  import { infoListApi } from '/@/api/demo/table';
+  import { infoApi, processTaskApi, processTaskListApi } from '/@/api/demo/table';
   import { useRouter } from 'vue-router';
 
   const columns: BasicColumn[] = [
@@ -27,24 +27,10 @@
       width: 150,
     },
     {
-      title: '上传时间',
+      title: '发生时间',
       width: 150,
       sorter: true,
       dataIndex: 'created_at',
-    },
-    {
-      title: '上传用户',
-      dataIndex: 'creator',
-      width: 150,
-      filters: [
-        { text: 'Male', value: 'male' },
-        { text: 'Female', value: 'female' },
-      ],
-    },
-    {
-      title: '涉及单位',
-      width: 150,
-      dataIndex: 'department',
     },
     {
       title: '信息种类',
@@ -66,8 +52,14 @@
     setup() {
       const router = useRouter();
       const data = ref([]);
-      infoListApi().then((res) => {
-        res.results.forEach((item) => {
+      processTaskListApi().then((res) => {
+        res.results.forEach(async (item) => {
+          // let infoData = ref([]);
+          // const infoData = await infoApi(item.info);
+          // console.log(infoData.infoType);
+          item.infoType = '生活';
+          item.subject = 'XXX';
+          // item.subject = infoData.subject;
           switch (item.state) {
             case 0:
               item.state = '待老师审核';
@@ -107,7 +99,7 @@
       function goToDetail(id) {
         // console.log(id);
         router.push({
-          path: '/infoManage/infoDetail',
+          path: '/infoManage/processTaskDetail',
           query: {
             infoId: id,
           },

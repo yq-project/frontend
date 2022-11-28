@@ -9,9 +9,9 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, onBeforeMount, ref } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicTable, useTable, BasicColumn } from '/@/components/Table';
-  import { infoListApi } from '/@/api/demo/table';
+  import {infoApi, infoListApi, infoScoreApi} from '/@/api/demo/table';
   import { useMessage } from '/@/hooks/web/useMessage';
   const columns: BasicColumn[] = [
     {
@@ -26,17 +26,17 @@
     {
       title: '上传时间',
       width: 150,
-      sorter: true,
+      // sorter: true,
       dataIndex: 'created_at',
     },
     {
       title: '上传用户',
       dataIndex: 'creator',
       width: 150,
-      filters: [
-        { text: 'Male', value: 'male' },
-        { text: 'Female', value: 'female' },
-      ],
+      // filters: [
+      //   { text: 'Male', value: 'male' },
+      //   { text: 'Female', value: 'female' },
+      // ],
     },
     {
       title: '当前评分',
@@ -80,6 +80,8 @@
       const data = ref([]);
       infoListApi().then((res) => {
         data.value = res.results;
+        // console.log(res.results);
+        // console.log(data.value);
       });
       const [registerTable] = useTable({
         title: '舆情评分页',
@@ -98,13 +100,13 @@
 
       // 模拟将指定数据保存
       function feakSave(id, value) {
-        createMessage.loading({
-          content: `正在保存`,
-          key: '_save_fake_data',
-          duration: 0,
-        });
+        // createMessage.loading({
+        //   content: `正在保存`,
+        //   key: '_save_fake_data',
+        //   duration: 0,
+        // });
         return new Promise((resolve) => {
-          setTimeout(() => {
+          setTimeout(async () => {
             if (value === '') {
               createMessage.error({
                 content: '保存失败：不能为空',
@@ -114,10 +116,22 @@
               resolve(false);
             } else {
               // createMessage.success({
-              //   content: `记录${id}的${key}已保存`,
+              //   content: ``,
               //   key: '_save_fake_data',
               //   duration: 2,
               // });
+              let params = {
+                score: value,
+              };
+              // console.log(id);
+              await infoScoreApi(id, params);
+              infoListApi().then((res) => {
+                data.value = res.results;
+                // console.log(res.results);
+                // console.log(data.value);
+              });
+              // data.value = await infoListApi();
+              // console.log(data);
               resolve(true);
             }
           }, 2000);
@@ -126,7 +140,7 @@
 
       async function beforeEditSubmit({ record, index, key, value }) {
         console.log('单元格数据正在准备提交', { record, index, key, value });
-        return await feakSave(record.id, value);
+        return await feakSave(data.value[index].id, value);
       }
 
       function handleEditCancel() {

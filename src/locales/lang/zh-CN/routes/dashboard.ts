@@ -19,8 +19,9 @@ export default {
     infoManage: '舆情管理',
     infoList: '舆情列表',
     infoDetail: '舆情信息详情',
+    processTaskList: '二级领导任务',
     toDoList: '待办事务',
-    score: '有效评分',
-    assignment: '任务分配',
+    score: '舆情评分',
+    assignment: '网评任务',
   },
 };

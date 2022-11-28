@@ -23,7 +23,7 @@
         <a-descriptions-item label="信息种类"> {{ data.infoType }} </a-descriptions-item>
         <a-descriptions-item label="涉及单位"> {{ data.department }} </a-descriptions-item>
         <a-descriptions-item label="源链接">
-          <a href="https://www.zhihu.com/">{{ data.infoUrl }}/</a>
+          <a class="a-style" @click="linkDownload(data.infoUrl)">{{ data.infoUrl }}</a>
         </a-descriptions-item>
         <a-descriptions-item label="上传日期"> {{ data.created_at }} </a-descriptions-item>
         <a-descriptions-item label="备注"> {{ data.tip }} </a-descriptions-item>
@@ -38,13 +38,12 @@
           <a-step title="待老师审核" />
           <a-step title="老师结束流程" />
         </a-steps>
-        <a-steps v-if="state === 4" :current="2" progress-dot size="small">
+        <a-steps v-if="state === 4" :current="1" progress-dot size="small">
           <a-step title="上传信息">
             <template #description>
               <p>{{ data.created_at }}</p>
             </template>
           </a-step>
-          <a-step title="待老师审核" />
           <a-step title="学生撤回信息" />
         </a-steps>
         <a-steps
@@ -82,7 +81,9 @@
       </a-card>
 
       <a-card title="截图" :bordered="false" class="mt-5">
-        <a-descriptions-item label="截图" :span="2"> 此处是截图... </a-descriptions-item>
+        <a-descriptions-item label="截图" :span="2">
+          <img :src="data.picture" style="width: 800px" />
+        </a-descriptions-item>
       </a-card>
     </div>
   </PageWrapper>
@@ -114,13 +115,14 @@
       [Tabs.TabPane.name]: Tabs.TabPane,
     },
     setup() {
-      let data = ref([]);
-      let processTaskData = ref([]);
+      const data = ref([]);
+      const processTaskData = ref([]);
       const route = useRoute();
       const router = useRouter();
       const param = route.query.infoId;
       const callback = (res) => {
         data.value = res;
+        console.log(data.value.picture);
         if (data.value.state == 2) {
           processTaskApi(param).then((res) => {
             processTaskData.value = res;
@@ -184,7 +186,11 @@
         await processTaskPassApi(param);
         infoApi(param).then(callback);
       };
+      function linkDownload(url) {
+        window.open(url, '_blank'); // 新窗口打开外链接
+      }
       return {
+        linkDownload,
         processTaskData,
         processTaskState,
         data,
