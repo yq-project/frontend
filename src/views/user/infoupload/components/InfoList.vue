@@ -1,12 +1,33 @@
 <template>
-  <BasicTable @register="registerTable"></BasicTable>
+  <BasicTable @register="registerTable">
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.key === 'action'">
+        <TableAction
+          stopButtonPropagation
+          :actions="[
+            {
+              label: '详情',
+              icon: 'bx:message-detail',
+              onClick: handleDetail.bind(null, record),
+            },
+          ]"
+        />
+      </template>
+    </template>
+  </BasicTable>
 </template>
 <script lang="ts" setup>
   import { useRouter } from 'vue-router';
   import { ref } from 'vue';
-  import { BasicTable, useTable } from '/@/components/Table';
+  import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { getInfoListApi } from '/@/api/sys/info';
   import { stateMap } from '/@/enums/infoStateEnum';
+  const actionColumn = {
+    width: 120,
+    title: 'Action',
+    dataIndex: 'action',
+    fixed: 'right',
+  };
   const columns = [
     {
       title: '舆情名称',
@@ -30,9 +51,11 @@
   ];
   const data = ref([]);
   const count = ref(0);
+  const router = useRouter();
   const [registerTable, { setPagination }] = useTable({
     dataSource: data,
     columns: columns,
+    actionColumn: actionColumn as BasicColumn,
     pagination: {
       //@ts-ignore
       onChange: pageChange,
@@ -58,8 +81,11 @@
     });
   };
   getInfoList(1);
-  function pageChange(currentPage, pageSize) {
+  function pageChange(currentPage, _pageSize) {
     getInfoList(currentPage);
   }
-  const router = useRouter();
+  function handleDetail(record) {
+    router.push(`/user/infomanage/detail?id=${record.id}`);
+  }
+  
 </script>
