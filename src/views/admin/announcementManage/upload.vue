@@ -46,6 +46,12 @@
           render: ({ model, field }) => {
             return h(Tinymce, {
               value: model[field],
+              plugins: [],
+              toolbar: [
+                'fontsizeselect lineheight searchreplace bold italic underline strikethrough alignleft aligncenter alignright outdent indent  blockquote undo redo removeformat',
+                'hr bullist numlist link',
+              ],
+              showImageUpload: false,
               onChange: (value: string) => {
                 model[field] = value;
               },
