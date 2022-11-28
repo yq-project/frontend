@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper class="high-form" title="舆情信息填写">
+  <PageWrapper title="舆情信息填写">
     <template #extra>
       <a-button @click="cancel"> 返回 </a-button>
       <a-button type="primary" @click="submitAll"> 提交 </a-button>
@@ -47,7 +47,7 @@
         const data = await validate();
         if (imageList.value.length == 1) {
           data.picture = imageList.value[0];
-          createInfoApi(data).then((res) => {
+          createInfoApi(data).then((_res) => {
             createMessage.success(`信息已上传至系统`);
             router.push('/user/infomanage/upload');
           });
@@ -68,7 +68,4 @@
   });
 </script>
 <style lang="less" scoped>
-  .high-form {
-    padding-bottom: 48px;
-  }
 </style>

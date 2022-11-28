@@ -2,54 +2,41 @@
   <PageWrapper title="通知公告">
     <BasicTable @register="registerTable">
       <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'action' && showAction">
+        <template v-if="column.key === 'action' ">
           <TableAction
             stopButtonPropagation
             :actions="[
               {
-                label: '删除',
-                icon: 'ic:outline-delete-outline',
-                onClick: handleDelete.bind(null, record),
-              },
-              {
-                label: '编辑',
-                icon: 'material-symbols:edit-document-outline',
-                onClick: handleDelete.bind(null, record), //popConfirm
+                label: '详情',
+                icon: 'bx:message-detail',
+                onClick: handleDetail.bind(null, record),
               },
             ]"
           />
         </template>
       </template>
     </BasicTable>
+    <Modal @register="registerModal" />
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, ref } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicTable, useTable, TableAction, BasicColumn } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
-  import { useUserStore } from '/@/store/modules/user';
   import { getBroadcastListApi } from '/@/api/sys/broadcast';
+  import { useModal } from '/@/components/Modal';
+  import Modal from './components/modal.vue';
 
   export default defineComponent({
-    components: { BasicTable, TableAction, PageWrapper },
+    components: { BasicTable, TableAction, PageWrapper, Modal },
     setup() {
-      const userStore = useUserStore();
-      const showAction = computed(() => {
-        const { role } = userStore.getUserInfo;
-        if (role && role.length == 1) {
-          return role[0].value == 'admin';
-        } else {
-          return false;
-        }
-      });
-      const actionColumn = showAction.value
-        ? {
-            width: 160,
-            title: 'Action',
-            dataIndex: 'action',
-            fixed: 'right',
-          }
-        : undefined;
+      const actionColumn = {
+        width: 120,
+        title: 'Action',
+        dataIndex: 'action',
+        fixed: 'right',
+      };
+
       const tableColumns = [
         {
           title: '发布人',
@@ -68,7 +55,8 @@
       ] as BasicColumn[];
       const data = ref([]);
       const count = ref(0);
-      const [registerTable, { setLoading, setPagination, getPaginationRef }] = useTable({
+      const [registerModal, { openModal: openModal }] = useModal();
+      const [registerTable, { setPagination }] = useTable({
         dataSource: data,
         columns: tableColumns,
         rowKey: 'id',
@@ -78,7 +66,7 @@
           onChange: pageChange,
         },
       });
-      function pageChange(currentPage, pageSize) {
+      function pageChange(currentPage, _pageSize) {
         getBroadcastList(currentPage);
       }
 
@@ -86,6 +74,11 @@
         getBroadcastListApi(pageIndex).then((res) => {
           res.results.forEach((item) => {
             item.creator = '管理员';
+            let date = new Date(item.created_at);
+            let format = `${date.getFullYear()}年${
+              date.getMonth() + 1
+            }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
+            item.created_at = format;
           });
           count.value = res.count;
           data.value = res.results;
@@ -98,18 +91,17 @@
       };
       getBroadcastList(1);
 
-      function handleDelete(record: Recordable) {
-        console.log('点击了删除', record);
-      }
-      function handleOpen(record: Recordable) {
-        console.log('点击了启用', record);
+      function handleDetail(record) {
+        openModal(true, {
+          title: record.title,
+          content: record.content,
+        });
       }
 
       return {
         registerTable,
-        handleDelete,
-        handleOpen,
-        showAction,
+        handleDetail,
+        registerModal,
       };
     },
   });

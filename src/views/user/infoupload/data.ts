@@ -63,4 +63,10 @@ export const schemas: FormSchema[] = [
     },
     required: true,
   },
+  {
+    field: 'tip',
+    component: 'Input',
+    label: '备注',
+    required: true,
+  },
 ];
