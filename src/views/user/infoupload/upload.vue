@@ -47,7 +47,7 @@
         const data = await validate();
         if (imageList.value.length == 1) {
           data.picture = imageList.value[0];
-          createInfoApi(data).then((res) => {
+          createInfoApi(data).then((_res) => {
             createMessage.success(`信息已上传至系统`);
             router.push('/user/infomanage/upload');
           });
