@@ -74,7 +74,7 @@
         rowKey: 'id',
         actionColumn: actionColumn as BasicColumn,
         pagination: {
-          //ts
+          //@ts-ignore
           onChange: pageChange,
         },
       });

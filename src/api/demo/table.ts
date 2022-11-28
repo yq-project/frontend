@@ -9,7 +9,7 @@ enum Api {
   INFO_LIST2 = '/info',
   COMMENT_TASK_LIST = '/comment_task/?format=json',
   PROCESS_TASK_LIST = '/process_task',
-  USER_LIST = '/user/?format=json',
+  USER_LIST = '/user/',
 }
 
 /**
@@ -129,10 +129,10 @@ export function commentTaskListApi(mode: ErrorMessageMode = 'modal') {
   );
 }
 
-export function userListApi(mode: ErrorMessageMode = 'modal') {
+export function userListApi(pageIndex: number, mode: ErrorMessageMode = 'modal') {
   const response = authHttp.get(
     {
-      url: Api.USER_LIST,
+      url: Api.USER_LIST + `?page=${pageIndex}` + '&format=json',
     },
     {
       errorMessageMode: mode,

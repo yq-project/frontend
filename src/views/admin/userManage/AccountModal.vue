@@ -22,6 +22,7 @@
     //emits: ['success', 'register'],
     setup(props) {
       const isUpdate = ref(true);
+      const currentPage = ref(1);
       const rowId = ref('');
 
       const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
@@ -38,6 +39,8 @@
         resetFields();
         setModalProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
+        //console.log(data.currentPage);
+        currentPage.value = data.currentPage;
 
         if (unref(isUpdate)) {
           rowId.value = data.record.id;
@@ -57,12 +60,12 @@
           if (unref(isUpdate)) {
             const data = await UpdateUserApi(values, rowId.value);
             console.log(data);
-            props.updateUserList();
+            props.updateUserList(currentPage.value);
             createMessage.info('更新成功！');
           } else {
             const data = await CreateUserApi(values);
             console.log(data);
-            props.updateUserList();
+            props.updateUserList(currentPage.value);
             createMessage.info('新建成功！');
           }
           closeModal();
