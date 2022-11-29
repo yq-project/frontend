@@ -124,6 +124,10 @@ export const useUserStore = defineStore({
       let roles: RoleInfo[] = [];
       const { setWatermark, clear } = useWatermark();
       clear();
+      if (userInfo.role == 2) {
+        roles = [{ roleName: 'leader', value: 'leader' }];
+        userInfo.homePath = '/leader/processTaskList';
+      }
       if (userInfo.role == 1) {
         roles.push({ roleName: 'user', value: 'user' });
         userInfo.homePath = '/user/homepage';

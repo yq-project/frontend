@@ -63,26 +63,6 @@ const dashboard: AppRouteModule = {
         title: t('routes.dashboard.infoManage.infoDetail'),
       },
     },
-    {
-      path: 'processTaskList',
-      name: 'ProcessTaskList',
-      component: () => import('/@/views/admin/infoManage/processTaskList.vue'),
-      meta: {
-        // affix: true,
-        // hideMenu: true,
-        title: t('routes.dashboard.infoManage.processTaskList'),
-      },
-    },
-    {
-      path: 'processTaskDetail',
-      name: 'ProcessTaskDetail',
-      component: () => import('/@/views/admin/infoManage/processTaskDetail.vue'),
-      meta: {
-        // affix: true,
-        hideMenu: true,
-        title: t('routes.dashboard.infoManage.processTaskDetail'),
-      },
-    },
   ],
 };
 

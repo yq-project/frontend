@@ -116,7 +116,7 @@
           processTaskReadApi(info.id, params);
         }
         router.push({
-          path: '/infoManage/processTaskDetail',
+          path: '/leader/processTaskDetail',
           query: {
             infoId: info.id,
           },
