@@ -39,7 +39,7 @@ export const demoListApi2 = (params: DemoParams) =>
 export function infoListApi(mode: ErrorMessageMode = 'modal') {
   return basicHttp.get(
     {
-      url: Api.INFO_LIST,
+      url: Api.INFO_LIST2 + '/?page=2&format=json',
     },
     {
       errorMessageMode: mode,
@@ -123,6 +123,30 @@ export function processTaskPassApi(param, mode: ErrorMessageMode = 'modal') {
   return basicHttp.post(
     {
       url: Api.PROCESS_TASK_LIST + '/' + param + '/pass_task/?format=json',
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+export function processTaskReadApi(id, params, mode: ErrorMessageMode = 'modal') {
+  return basicHttp.post(
+    {
+      url: Api.PROCESS_TASK_LIST + '/' + id + '/read_task/?format=json',
+      params,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+export function processTaskFeedbackApi(id, params, mode: ErrorMessageMode = 'modal') {
+  return basicHttp.put(
+    {
+      url: Api.PROCESS_TASK_LIST + '/' + id + '/feedback/?format=json',
+      params,
     },
     {
       errorMessageMode: mode,

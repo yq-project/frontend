@@ -3,18 +3,19 @@
     <BasicTable @register="registerTable">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === '操作'">
-          <a-button class="mr-2" @click="goToDetail(record.id)"> 查看详情 </a-button>
+          <a-button class="mr-2" @click="goToDetail(record)"> 前往处理 </a-button>
         </template>
       </template>
     </BasicTable>
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { computed, defineComponent, ref } from 'vue';
   import { BasicTable, useTable, BasicColumn } from '/@/components/Table';
 
-  import { infoApi, processTaskApi, processTaskListApi } from '/@/api/demo/table';
+  import { infoApi, processTaskReadApi, processTaskListApi } from '/@/api/demo/table';
   import { useRouter } from 'vue-router';
+  import { useUserStore } from '/@/store/modules/user';
 
   const columns: BasicColumn[] = [
     {
@@ -52,37 +53,39 @@
     setup() {
       const router = useRouter();
       const data = ref([]);
+      const privateList = ref([]);
       processTaskListApi().then((res) => {
-        res.results.forEach(async (item) => {
-          // let infoData = ref([]);
-          // const infoData = await infoApi(item.info);
-          // console.log(infoData.infoType);
-          item.infoType = '生活';
-          item.subject = 'XXX';
-          // item.subject = infoData.subject;
-          switch (item.state) {
-            case 0:
-              item.state = '待老师审核';
-              break;
-            case 1:
-              item.state = '待学生重新提交';
-              break;
-            case 2:
-              item.state = '审核通过';
-              break;
-            case 3:
-              item.state = '老师终止流程';
-              break;
-            case 4:
-              item.state = '学生撤回上传信息';
-              break;
+        let tmp = [];
+        res.results.forEach((item) => {
+          // console.log(item);
+          if (item.info.department === '电院') {
+            item.infoType = item.info.infoType;
+            item.subject = item.info.subject;
+            if (item.info.state === 2) {
+              switch (item.state) {
+                case 0:
+                  item.state = '信息未读';
+                  break;
+                case 1:
+                  item.state = '信息未反馈';
+                  break;
+                case 2:
+                  item.state = '待审核';
+                  break;
+                case 3:
+                  item.state = '审核通过';
+                  break;
+              }
+            }
+            tmp.push(item);
           }
         });
-        data.value = res.results;
+        privateList.value = tmp;
+        data.value = privateList.value;
       });
       const [registerTable] = useTable({
-        title: '舆情信息列表',
-        titleHelpMessage: ['以列表的形式展示所有的舆情信息'],
+        title: '待办任务列表',
+        titleHelpMessage: ['以列表的形式展示所有负责的舆情信息'],
         columns: columns,
         dataSource: data,
         showIndexColumn: false,
@@ -96,12 +99,26 @@
         },
       });
 
-      function goToDetail(id) {
-        // console.log(id);
+      function goToDetail(info) {
+        // console.log(info.info.subject);
+        if (info.state === '信息未读') {
+          const params = {
+            info: {
+              subject: info.info.subject,
+              content: info.info.content,
+              department: info.info.department,
+              infoUrl: info.info.infoUrl,
+              picture: info.info.picture,
+              infoType: info.info.infoType,
+              tip: info.info.tip,
+            },
+          };
+          processTaskReadApi(info.id, params);
+        }
         router.push({
           path: '/infoManage/processTaskDetail',
           query: {
-            infoId: id,
+            infoId: info.id,
           },
         });
       }

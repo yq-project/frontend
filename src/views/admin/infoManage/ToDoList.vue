@@ -39,27 +39,17 @@
     setup() {
       const router = useRouter();
       const data = ref([]);
+      const privateList = ref([]);
       infoListApi().then((res) => {
+        let tmp = [];
         res.results.forEach((item) => {
-          switch (item.state) {
-            case 0:
-              item.state = '待老师审核';
-              break;
-            case 1:
-              item.state = '待学生重新提交';
-              break;
-            case 2:
-              item.state = '审核通过';
-              break;
-            case 3:
-              item.state = '老师终止流程';
-              break;
-            case 4:
-              item.state = '学生撤回上传信息';
-              break;
+          if (item.state === 0) {
+            item.state = '待老师审核';
+            tmp.push(item);
           }
         });
-        data.value = res.results;
+        privateList.value = tmp;
+        data.value = privateList.value;
       });
       const [registerTable] = useTable({
         title: '待办事务列表',

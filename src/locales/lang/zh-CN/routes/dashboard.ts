@@ -20,6 +20,7 @@ export default {
     infoList: '舆情列表',
     infoDetail: '舆情信息详情',
     processTaskList: '二级领导任务',
+    processTaskDetail: '二级领导任务详情',
     toDoList: '待办事务',
     score: '舆情评分',
     assignment: '网评任务',

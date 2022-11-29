@@ -1,8 +1,8 @@
 <template>
-  <PageWrapper title="舆情主题：XXX" contentBackground>
+  <PageWrapper :title="title" contentBackground>
     <template v-if="state === 1" #extra>
       <a-button @click="back"> 返回 </a-button>
-      <a-button @click="advice"> 退回修改 </a-button>
+      <a-button class="my-4" @click="send"> 退回修改 </a-button>
       <a-button @click="close"> 中止流程 </a-button>
       <a-button type="primary" @click="pass"> 审核通过 </a-button>
     </template>
@@ -86,6 +86,7 @@
         </a-descriptions-item>
       </a-card>
     </div>
+    <Modal4 @register="register4" :update="update" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -100,7 +101,9 @@
     infoCloseApi,
     processTaskPassApi,
   } from '/@/api/demo/table';
+  import Modal4 from './Modal4.vue';
   import { useRoute, useRouter } from 'vue-router';
+  import { useModal } from '/@/components/Modal';
 
   export default defineComponent({
     components: {
@@ -113,6 +116,7 @@
       [Steps.Step.name]: Steps.Step,
       [Tabs.name]: Tabs,
       [Tabs.TabPane.name]: Tabs.TabPane,
+      Modal4,
     },
     setup() {
       const data = ref([]);
@@ -120,11 +124,15 @@
       const route = useRoute();
       const router = useRouter();
       const param = route.query.infoId;
+      const title = computed(() => {
+        return '舆情主题：' + data.value.subject;
+      });
+      const [register4, { openModal: openModal4 }] = useModal();
       const callback = (res) => {
         data.value = res;
-        console.log(data.value.picture);
+        console.log(data.value);
         if (data.value.state == 2) {
-          processTaskApi(param).then((res) => {
+          processTaskApi(data.value.process_id).then((res) => {
             processTaskData.value = res;
           });
         }
@@ -161,7 +169,7 @@
         }
       });
       function back() {
-        router.back();
+        router.push('/infoManage/infoList');
       }
       const advice = async () => {
         const id = route.query.infoId;
@@ -189,8 +197,19 @@
       function linkDownload(url) {
         window.open(url, '_blank'); // 新窗口打开外链接
       }
+      function update() {
+        infoApi(param).then(callback);
+      }
+      function send() {
+        openModal4(true, {
+          data: param,
+          info: data.value.advice,
+        });
+      }
       return {
+        update,
         linkDownload,
+        title,
         processTaskData,
         processTaskState,
         data,
@@ -200,6 +219,9 @@
         passProcessTask,
         close,
         back,
+        send,
+        register4,
+        openModal4,
       };
     },
   });
