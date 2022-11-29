@@ -42,6 +42,14 @@
       const data = ref([]);
       const updateBroadcastList = () => {
         broadcastListApi().then((res) => {
+          res.results.forEach((item) => {
+            item.creator = '管理员';
+            let date = new Date(item.created_at);
+            let format = `${date.getFullYear()}年${
+              date.getMonth() + 1
+            }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
+            item.created_at = format;
+          });
           data.value = res.results;
           console.log(data.value);
         });
@@ -78,6 +86,7 @@
           query: {
             title: record.title,
             content: record.content,
+            id: record.id,
           },
         });
       }

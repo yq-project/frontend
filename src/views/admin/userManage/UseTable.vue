@@ -23,11 +23,22 @@
     components: { BasicTable, Tag },
     setup() {
       const data = ref([]);
-      onBeforeMount(async () => {
-        const res = await userListApi();
-        data.value = res.results;
-      });
-      const [registerTable] = useTable({
+      const updateUserList = (currentPage) => {
+        userListApi(currentPage).then((res) => {
+          for (var i = 0; i < res.results.length; i++) {
+            if (res.results[i].role != 1) {
+              res.results.splice(i, 1);
+            }
+          }
+          data.value = res.results;
+          setPagination({
+            total: res.count,
+            showSizeChanger: false,
+            pageSize: 10,
+          });
+        });
+      };
+      const [registerTable, { setPagination }] = useTable({
         canResize: true,
         title: '用户列表',
         dataSource: data,
@@ -39,7 +50,15 @@
         rowKey: 'id',
         showTableSetting: true,
         showIndexColumn: false,
+        pagination: {
+          //@ts-ignore
+          onChange: pageChange,
+        },
       });
+      updateUserList(1);
+      function pageChange(currentPage) {
+        updateUserList(currentPage);
+      }
       function getBasicColumns(): BasicColumn[] {
         return [
           {
@@ -57,13 +76,13 @@
           },
           {
             title: '上传信息数量',
-            dataIndex: 'uploadInfoNum',
+            dataIndex: 'info_count',
             width: 150,
             sorter: true,
           },
           {
             title: '上传信息平均得分',
-            dataIndex: 'uploadInfoScore',
+            dataIndex: 'info_avg',
             width: 150,
             sorter: true,
           },

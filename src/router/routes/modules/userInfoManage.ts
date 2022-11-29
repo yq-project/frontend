@@ -28,6 +28,16 @@ const dashboard: AppRouteModule = {
       },
     },
     {
+      path: 'detail',
+      name: 'Detail',
+      component: () => import('/@/views/user/infoupload/Detail.vue'),
+      meta: {
+        title: '信息详情',
+        icon: 'bx:message-detail',
+        hideMenu: true,
+      },
+    },
+    {
       path: 'todos',
       name: 'Todos',
       component: () => import('/@/views/user/todos/index.vue'),

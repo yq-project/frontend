@@ -4,7 +4,7 @@ export default {
   workbench: '工作台',
   analysis: '分析页',
   user: '用户管理',
-  userList: '用户列表',
+  userList: '助管列表',
   userManage: '用户管理',
   announcement: '公告管理',
   updateAnnouncement: '公告管理',

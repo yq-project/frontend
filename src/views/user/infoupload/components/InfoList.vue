@@ -1,30 +1,91 @@
 <template>
-  <BasicTable
-    :columns="columns"
-    :dataSource="data"
-    :loading="loading"
-    :striped="striped"
-    :bordered="border"
-    :pagination="pagination"
-  >
-    <template #toolbar>
-      <a-button type="primary" @click="handleSubmit"> 上传信息 </a-button>
+  <BasicTable @register="registerTable">
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.key === 'action'">
+        <TableAction
+          stopButtonPropagation
+          :actions="[
+            {
+              label: '详情',
+              icon: 'bx:message-detail',
+              onClick: handleDetail.bind(null, record),
+            },
+          ]"
+        />
+      </template>
     </template>
   </BasicTable>
 </template>
 <script lang="ts" setup>
   import { useRouter } from 'vue-router';
   import { ref } from 'vue';
-  import { BasicTable } from '/@/components/Table';
-  import { getBasicColumns, getBasicData } from './tableData';
-  const loading = ref(false);
-  const striped = ref(true);
-  const border = ref(true);
-  const pagination = ref<any>(true);
-  const columns = getBasicColumns();
-  const data = getBasicData();
-  const router = useRouter();
-  const handleSubmit = () => {
-    router.push('/user/infomanage/uploadform');
+  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { getInfoListApi } from '/@/api/sys/info';
+  import { stateMap } from '/@/enums/infoStateEnum';
+  const actionColumn = {
+    width: 120,
+    title: 'Action',
+    dataIndex: 'action',
+    fixed: 'right',
   };
+  const columns = [
+    {
+      title: '舆情名称',
+      dataIndex: 'subject',
+    },
+    {
+      title: '发布时间',
+      width: 250,
+      dataIndex: 'created_at',
+    },
+    {
+      title: '评分',
+      width: 150,
+      dataIndex: 'score',
+    },
+    {
+      title: '当前状态',
+      width: 150,
+      dataIndex: 'state',
+    },
+  ];
+  const data = ref([]);
+  const count = ref(0);
+  const router = useRouter();
+  const [registerTable, { setPagination }] = useTable({
+    dataSource: data,
+    columns: columns,
+    actionColumn: actionColumn as BasicColumn,
+    pagination: {
+      //@ts-ignore
+      onChange: pageChange,
+    },
+  });
+  const getInfoList = (page) => {
+    getInfoListApi(page).then((res) => {
+      res.results.forEach((item) => {
+        item.state = stateMap.get(item.state);
+        let date = new Date(item.created_at);
+        let format = `${date.getFullYear()}年${
+          date.getMonth() + 1
+        }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
+        item.created_at = format;
+      });
+      count.value = res.count;
+      data.value = res.results;
+      setPagination({
+        total: res.count,
+        showSizeChanger: false,
+        pageSize: 10,
+      });
+    });
+  };
+  getInfoList(1);
+  function pageChange(currentPage, _pageSize) {
+    getInfoList(currentPage);
+  }
+  function handleDetail(record) {
+    router.push(`/user/infomanage/detail?id=${record.id}`);
+  }
+  
 </script>

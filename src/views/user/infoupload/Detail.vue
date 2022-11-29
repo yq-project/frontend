@@ -1,14 +1,14 @@
 <template>
-  <PageWrapper title="舆情信息填写">
+  <PageWrapper title="舆情信息详情">
     <template #extra>
       <a-button @click="cancel"> 返回 </a-button>
-      <a-button type="primary" @click="submitAll"> 提交 </a-button>
     </template>
     <a-card :bordered="false">
       <BasicForm @register="register" />
     </a-card>
 
-    <a-card title="截图上传" :bordered="false">
+    <a-card title="截图信息" :bordered="false">
+      <ImagePreview v-if="showImg" :imageList="[imageUrl]" />
       <BasicUpload
         :maxSize="20"
         :maxNumber="1"
@@ -29,16 +29,18 @@
   import { BasicUpload } from '/@/components/Upload';
   import { uploadApi } from '/@/api/sys/upload';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { createInfoApi } from '/@/api/sys/info';
-  import { useRouter } from 'vue-router';
+  import { getInfoApi } from '/@/api/sys/info';
+  import { useRouter, useRoute } from 'vue-router';
+  import { ImagePreview } from '/@/components/Preview/index';
 
   export default defineComponent({
     name: 'FormHightPage',
-    components: { BasicForm, BasicUpload, PageWrapper, [Card.name]: Card },
+    components: { BasicForm, BasicUpload, PageWrapper, [Card.name]: Card, ImagePreview },
     setup() {
       const imageList = ref([]);
       const router = useRouter();
-      const [register, { validate }] = useForm({
+      const route = useRoute();
+      const [register,{ validate, setFieldsValue }] = useForm({
         layout: 'vertical',
         schemas: schemas,
         showActionButtonGroup: false,
@@ -59,13 +61,23 @@
         router.push('/user/infomanage/upload');
       };
       const { createMessage } = useMessage();
+      const showImg = ref(false);
+      const imageUrl = ref('');
       const handleChange = (list: string[]) => {
         imageList.value = list;
         createMessage.info(`截图已保存`);
       };
-      return { submitAll, register, uploadApi, handleChange, cancel, imageList };
+      if (route.query.id) {
+        getInfoApi(parseInt(route.query.id as string)).then((res) => {
+          setFieldsValue(res);
+          showImg.value = true;
+          imageUrl.value = res.picture;
+        });
+      } else {
+        router.push('/user/infomanage/upload');
+      }
+      return { showImg, imageUrl, submitAll, register, uploadApi, handleChange, cancel, imageList };
     },
   });
 </script>
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>
