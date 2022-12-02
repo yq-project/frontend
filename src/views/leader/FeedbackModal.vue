@@ -14,7 +14,7 @@
 <script lang="ts">
   import { defineComponent, ref, nextTick } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
-  import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
+  import { BasicForm, FormSchema, useForm } from '/@/components/Form';
   import { processTaskFeedbackApi } from '/@/api/demo/table';
   const schemas: FormSchema[] = [
     {
@@ -86,6 +86,7 @@
         const param = {
           feedback: value.field1,
         };
+        console.log(param);
         await processTaskFeedbackApi(id, param);
         props.update();
         closeModal();

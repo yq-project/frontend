@@ -61,7 +61,7 @@
         let tmp = [];
         res.results.forEach((item) => {
           // console.log(item);
-          if (item.info.department === '电院') {
+          if (item.info.department === '电院' && item.state !== 3) {
             item.infoType = item.info.infoType;
             item.subject = item.info.subject;
             if (item.info.state === 2) {
@@ -87,8 +87,8 @@
         data.value = privateList.value;
       });
       const [registerTable] = useTable({
-        title: '任务列表',
-        titleHelpMessage: ['以列表的形式展示所有负责的舆情信息'],
+        title: '待办任务列表',
+        titleHelpMessage: ['以列表的形式展示所有负责的未审核通过的舆情信息'],
         columns: columns,
         dataSource: data,
         showIndexColumn: false,

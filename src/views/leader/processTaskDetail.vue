@@ -23,6 +23,7 @@
               <p>{{ infoData.created_at }}</p>
             </template>
           </a-step>
+          <a-step title="待反馈" />
           <a-step title="待审核">
             <template v-if="data.state >= 2" #description>
               <p>二级领导反馈：{{ data.feedback }}</p>
@@ -86,7 +87,7 @@
       };
       processTaskApi(param).then(callback);
       function back() {
-        router.push('/infoManage/processTaskList');
+        router.push('/leader/processTaskList');
       }
       function linkDownload(url) {
         window.open(url, '_blank'); // 新窗口打开外链接

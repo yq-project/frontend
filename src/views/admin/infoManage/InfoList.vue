@@ -66,29 +66,37 @@
     setup() {
       const router = useRouter();
       const data = ref([]);
-      infoListApi().then((res) => {
-        res.results.forEach((item) => {
-          switch (item.state) {
-            case 0:
-              item.state = '待老师审核';
-              break;
-            case 1:
-              item.state = '待学生重新提交';
-              break;
-            case 2:
-              item.state = '审核通过';
-              break;
-            case 3:
-              item.state = '老师终止流程';
-              break;
-            case 4:
-              item.state = '学生撤回上传信息';
-              break;
-          }
+      const updateInfoList = (currentPage) => {
+        infoListApi(currentPage).then((res) => {
+          res.results.forEach((item) => {
+            switch (item.state) {
+              case 0:
+                item.state = '待老师审核';
+                break;
+              case 1:
+                item.state = '待学生重新提交';
+                break;
+              case 2:
+                item.state = '审核通过';
+                break;
+              case 3:
+                item.state = '老师终止流程';
+                break;
+              case 4:
+                item.state = '学生撤回上传信息';
+                break;
+            }
+          });
+          data.value = res.results;
+          setPagination({
+            total: res.count,
+            showSizeChanger: false,
+            pageSize: 10,
+          });
         });
-        data.value = res.results;
-      });
-      const [registerTable] = useTable({
+      };
+      updateInfoList(1);
+      const [registerTable, { setPagination }] = useTable({
         title: '舆情信息列表',
         titleHelpMessage: ['以列表的形式展示所有的舆情信息'],
         columns: columns,
@@ -102,7 +110,15 @@
           dataIndex: '操作',
           // slots: { customRender: 'action' },
         },
+        pagination: {
+          //@ts-ignore
+          onChange: pageChange,
+        },
       });
+
+      function pageChange(currentPage) {
+        updateInfoList(currentPage);
+      }
 
       function goToDetail(id) {
         // console.log(id);

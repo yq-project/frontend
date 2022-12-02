@@ -18,6 +18,16 @@ const dashboard: AppRouteModule = {
   },
   children: [
     {
+      path: 'processTaskToDoList',
+      name: 'ProcessTaskToDoList',
+      component: () => import('/@/views/leader/processTaskToDoList.vue'),
+      meta: {
+        // affix: true,
+        // hideMenu: true,
+        title: t('routes.dashboard.infoManage.processTaskToDoList'),
+      },
+    },
+    {
       path: 'processTaskList',
       name: 'ProcessTaskList',
       component: () => import('/@/views/leader/processTaskList.vue'),
