@@ -57,11 +57,13 @@
       const router = useRouter();
       const data = ref([]);
       const privateList = ref([]);
+      const userStore = useUserStore();
+      const { department } = userStore.getUserInfo;
       processTaskListApi().then((res) => {
         let tmp = [];
         res.results.forEach((item) => {
           // console.log(item);
-          if (item.info.department === '电院' && item.state !== 3) {
+          if (item.info.department === department && item.state !== 3) {
             item.infoType = item.info.infoType;
             item.subject = item.info.subject;
             if (item.info.state === 2) {

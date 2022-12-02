@@ -39,7 +39,7 @@ export const demoListApi2 = (params: DemoParams) =>
 export function infoListApi(pageIndex: number, mode: ErrorMessageMode = 'modal') {
   return basicHttp.get(
     {
-      url: Api.INFO_LIST2 + `/?page=${pageIndex}` + '&format=json',
+      url: Api.INFO_LIST2 + `/?page=${pageIndex}`,
     },
     {
       errorMessageMode: mode,
