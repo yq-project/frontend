@@ -1,26 +1,30 @@
 <template>
-  <BasicModal v-bind="$attrs" :title="title" @register="register">
+  <BasicModal :title="title" @register="register" @ok="handleConfirm">
     <div v-html="content"></div>
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
-  import { BasicModal, useModalInner } from '/@/components/Modal';
-  import { filterXSS } from 'xss';
-  export default defineComponent({
-    components: { BasicModal },
-    setup() {
-      const title = ref('');
-      const content = ref('');
-      const [register] = useModalInner((data) => {
-        data && onDataReceive(data);
-      });
+import { defineComponent, ref } from 'vue';
+import { BasicModal, useModalInner } from '/@/components/Modal';
+import { filterXSS } from 'xss';
+export default defineComponent({
+  components: { BasicModal },
+  setup() {
+    const title = ref('');
+    const content = ref('');
+    const [register, { closeModal }] = useModalInner((data) => {
+      data && onDataReceive(data);
+    });
 
-      function onDataReceive(data) {
-        title.value = data.title;
-        content.value = filterXSS(data.content);
-      }
-      return { register, title, content };
-    },
-  });
+    function onDataReceive(data) {
+      title.value = data.title;
+      content.value = filterXSS(data.content);
+    }
+
+    const handleConfirm = () => {
+      closeModal();
+    };
+    return { register, title, content, handleConfirm };
+  },
+});
 </script>

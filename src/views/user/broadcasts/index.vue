@@ -31,7 +31,6 @@
     components: { BasicTable, TableAction, PageWrapper, Modal },
     setup() {
       const actionColumn = {
-        width: 120,
         title: 'Action',
         dataIndex: 'action',
         fixed: 'right',
@@ -46,6 +45,7 @@
         {
           title: '标题',
           dataIndex: 'title',
+          width: 250,
         },
         {
           title: '发布时间',
