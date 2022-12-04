@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper title="七彩花店事件" contentBackground>
+  <PageWrapper title="网评任务详情" contentBackground>
     <div class="pt-4 m-4 desc-wrap">
       <a-descriptions size="small" :column="2">
         <a-descriptions-item label="舆情名称">七彩花店事件</a-descriptions-item>
@@ -7,11 +7,11 @@
         <a-descriptions-item label="舆情链接"> <a>baidu.com</a> </a-descriptions-item>
         <a-descriptions-item label="任务发布人"> 管理员A </a-descriptions-item>
         <a-descriptions-item label="任务发布时间"> 2017-07-10 </a-descriptions-item>
-        <a-descriptions-item label="参考口径"> 请于两个工作日内确认 注意立场高度 </a-descriptions-item>
+        <a-descriptions-item label="参考口径">
+          请于两个工作日内确认 注意立场高度
+        </a-descriptions-item>
       </a-descriptions>
-      <a-card title="舆情详情">
-        aaaa
-      </a-card>
+      <a-card title="舆情详情"> aaaa </a-card>
       <a-card title="舆情截图">
         <ImagePreview :imageList="imgList" />
       </a-card>
@@ -33,7 +33,7 @@
       </a-card>
 
       <a-card title="填写反馈" class="my-5">
-        <TextArea rows="4" placeholder="请反馈任务完成情况" maxLength="200" />
+        <TextArea :rows="4" placeholder="请反馈任务完成情况" maxLength="200" />
         <Button type="primary" class="submit">提交</Button>
       </a-card>
     </div>
@@ -41,25 +41,24 @@
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import { BasicTable, useTable } from '/@/components/Table';
+  import { useTable } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
-  import { Divider, Card, Empty, Descriptions, Steps, Tabs, Input } from 'ant-design-vue';
-  import { createImgPreview, ImagePreview } from '/@/components/Preview/index';
-  import { Input} from 'ant-design-vue';
+  import { Divider, Card, Descriptions, Steps, Tabs, Input } from 'ant-design-vue';
+  import { ImagePreview } from '/@/components/Preview/index';
   import { Button } from '/@/components/Button';
   import { refundTimeTableSchema, refundTimeTableData } from './data';
-  
-  const {TextArea}=Input;
+  import { getTaskApi } from '/@/api/sys/commentTask';
+  import { useRoute } from 'vue-router';
+
+  const { TextArea } = Input;
   export default defineComponent({
     components: {
       Button,
       ImagePreview,
       TextArea,
-      BasicTable,
       PageWrapper,
       [Divider.name]: Divider,
       [Card.name]: Card,
-      Empty,
       [Descriptions.name]: Descriptions,
       [Descriptions.Item.name]: Descriptions.Item,
       [Steps.name]: Steps,
@@ -68,9 +67,7 @@
       [Tabs.TabPane.name]: Tabs.TabPane,
     },
     setup() {
-      const imgList: string[] = [
-    'https://picsum.photos/id/66/346/216',
-  ];
+      const imgList: string[] = ['https://picsum.photos/id/66/346/216'];
       const [registerTimeTable] = useTable({
         title: '退货进度',
         columns: refundTimeTableSchema,
@@ -78,6 +75,11 @@
         dataSource: refundTimeTableData,
         showIndexColumn: false,
         scroll: { y: 300 },
+      });
+      const route = useRoute();
+
+      getTaskApi(parseInt(route.query.id as string)).then((res) => {
+        console.log(res);
       });
 
       return {
@@ -89,8 +91,8 @@
 </script>
 
 <style scoped>
-.submit{
-  margin: 10px;
-  float: right;
-}
+  .submit {
+    margin: 10px;
+    float: right;
+  }
 </style>

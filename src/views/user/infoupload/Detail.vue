@@ -22,7 +22,7 @@
 </template>
 <script lang="ts">
   import { BasicForm, useForm } from '/@/components/Form';
-  import { defineComponent, ref } from 'vue';
+  import { defineComponent, ref, Ref } from 'vue';
   import { PageWrapper } from '/@/components/Page';
   import { Card } from 'ant-design-vue';
   import { schemas } from './data';
@@ -37,10 +37,10 @@
     name: 'FormHightPage',
     components: { BasicForm, BasicUpload, PageWrapper, [Card.name]: Card, ImagePreview },
     setup() {
-      const imageList = ref([]);
+      const imageList: Ref<any[]> = ref([]);
       const router = useRouter();
       const route = useRoute();
-      const [register,{ validate, setFieldsValue }] = useForm({
+      const [register, { validate, setFieldsValue }] = useForm({
         layout: 'vertical',
         schemas: schemas,
         showActionButtonGroup: false,

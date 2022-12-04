@@ -45,8 +45,7 @@
       };
       getTodoTasks(1);
       const handleClick = (id) => {
-        console.log(id);
-        router.push('/user/infomanage/task');
+        router.push(`/user/infomanage/task?id=${id}`);
       };
       return { tasks, handleClick, colors };
     },
