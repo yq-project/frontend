@@ -15,3 +15,14 @@ export function getTaskListApi(page: number, mode: ErrorMessageMode = 'modal') {
     },
   );
 }
+
+export function getTaskApi(id: number, mode: ErrorMessageMode = 'modal') {
+  return basicHttp.get(
+    {
+      url: Api.GETLIST + `${id}/`,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}

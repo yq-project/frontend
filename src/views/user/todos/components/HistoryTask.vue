@@ -55,6 +55,8 @@
       });
       count.value = res.count;
       data.value = res.results;
+      console.log(res.results)
+
       setPagination({
         total: res.count,
         showSizeChanger: false,
@@ -73,5 +75,7 @@
       onChange: pageChange,
     },
   });
-  function handleDetail(record) {}
+  function handleDetail(record) {
+    
+  }
 </script>

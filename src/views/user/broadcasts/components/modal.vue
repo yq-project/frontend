@@ -22,6 +22,7 @@ export default defineComponent({
     }
 
     const handleConfirm = () => {
+      //TODO 已读公告
       closeModal();
     };
     return { register, title, content, handleConfirm };
