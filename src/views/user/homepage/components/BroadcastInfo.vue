@@ -1,7 +1,7 @@
 <template>
   <Card title="通知公告" v-bind="$attrs">
     <template #extra>
-      <a-button type="link" size="small">更多</a-button>
+      <a-button type="link" size="small" @click="goMore">更多</a-button>
     </template>
     <List item-layout="horizontal" :data-source="dynamicInfoItems">
       <template #renderItem="{ item }">
@@ -25,6 +25,13 @@
   import { Card, List } from 'ant-design-vue';
   import { dynamicInfoItems } from './data';
   import { Icon } from '/@/components/Icon';
+  import {useRouter} from 'vue-router';
+
+  const router=useRouter();
+
+  const goMore=()=>{
+    router.push("/broadcasts/index")
+  }
 
   const ListItem = List.Item;
   const ListItemMeta = List.Item.Meta;

@@ -1,7 +1,7 @@
 <template>
   <Card title="待办事务" v-bind="$attrs">
     <template #extra>
-      <a-button type="link" size="small">更多</a-button>
+      <a-button type="link" size="small" @click="goMore">更多</a-button>
     </template>
 
     <template v-for="item in items" :key="item">
@@ -23,11 +23,16 @@
   import { Card } from 'ant-design-vue';
   import { Icon } from '/@/components/Icon';
   import { groupItems } from './data';
+  import { useRouter } from 'vue-router';
 
   export default defineComponent({
     components: { Card, CardGrid: Card.Grid, Icon },
     setup() {
-      return { items: groupItems };
+      const router=useRouter();
+      const goMore=()=>{
+        router.push("/user/infomanage/todos");
+      }
+      return { items: groupItems,goMore };
     },
   });
 </script>
