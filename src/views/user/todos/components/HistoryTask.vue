@@ -19,6 +19,7 @@
   import { ref } from 'vue';
   import { BasicTable, useTable, TableAction, BasicColumn } from '/@/components/Table';
   import { getTaskListApi } from '/@/api/sys/commentTask';
+  import { commentTaskStateMap } from '/@/enums/infoStateEnum';
   const data = ref([]);
   const actionColumn = {
     width: 120,
@@ -36,9 +37,14 @@
       width: 250,
       dataIndex: 'created_at',
     },
+    {
+      title: '状态',
+      width: 250,
+      dataIndex: 'state',
+    },
   ];
   const count = ref(0);
-  function pageChange(currentPage, _pageSize) {
+  function pageChange(_currentPage, _pageSize) {
     //
   }
 
@@ -52,9 +58,11 @@
           date.getMonth() + 1
         }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
         item.created_at = format;
+        item.state = commentTaskStateMap.get(item.state);
       });
       count.value = res.count;
       data.value = res.results;
+
       setPagination({
         total: res.count,
         showSizeChanger: false,
@@ -64,7 +72,7 @@
   };
   getTaskList(1);
   const [registerTable, { setPagination }] = useTable({
-    title: '已完成事务',
+    title: '全部事务',
     dataSource: data,
     columns: columns,
     actionColumn: actionColumn as BasicColumn,
@@ -73,5 +81,7 @@
       onChange: pageChange,
     },
   });
-  function handleDetail(record) {}
+  function handleDetail(_record) {
+    console.log(_record);
+  }
 </script>

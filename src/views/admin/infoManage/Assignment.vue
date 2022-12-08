@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <BasicTable @register="registerTable" @edit-change="onEditChange">
+    <BasicTable @register="registerTable">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === '操作'">
           <template v-if="record.status === '未审核'">

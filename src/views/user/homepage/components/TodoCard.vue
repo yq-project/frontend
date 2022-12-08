@@ -1,33 +1,62 @@
 <template>
   <Card title="待办事务" v-bind="$attrs">
-    <template #extra>
-      <a-button type="link" size="small">更多</a-button>
+  <template #extra>
+      <a-button type="link" size="small" @click="goMore">更多</a-button>
     </template>
-
-    <template v-for="item in items" :key="item">
-      <CardGrid class="!md:w-1/3 !w-full">
+    <template v-for="item in tasks" :key="item">
+      <CardGrid class="!md:w-1/3 !w-full" @click="handleClick(item.id)">
         <span class="flex">
           <Icon icon="carbon:task-add" :color="item.color" size="30" />
           <span class="text-lg ml-4">舆情名称</span>
         </span>
         <div class="flex mt-2 h-10 text-secondary">参考口径</div>
         <div class="flex justify-between text-secondary">
-          <span>{{ item.date }}</span>
+          <span>{{ item.created_at }}</span>
         </div>
       </CardGrid>
     </template>
   </Card>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref, Ref } from 'vue';
   import { Card } from 'ant-design-vue';
   import { Icon } from '/@/components/Icon';
-  import { groupItems } from './data';
+  import { useRouter } from 'vue-router';
+  import { getTodoTaskListApi } from '/@/api/sys/commentTask';
 
   export default defineComponent({
     components: { Card, CardGrid: Card.Grid, Icon },
     setup() {
-      return { items: groupItems };
+      const router = useRouter();
+      const goMore=()=>{
+        router.push("/user/infomanage/todos");
+      }
+      const tasks: Ref<any[]> = ref([]);
+      const colors = ['#00d8ff', '#3fb27f', '#e18525', '#bf0c2c', ''];
+      const getTodoTasks = (page) => {
+        getTodoTaskListApi(page).then(
+          (res) => {
+            if(res.results.length>6){
+              res.results.splice(6,res.results.length-6);
+            }
+            res.results.forEach((item, index) => {
+              let date = new Date(item.created_at);
+              let format = `${date.getFullYear()}年${
+                date.getMonth() + 1
+              }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
+              item.created_at = format;
+              item.color = colors[index % 5];
+            });
+            tasks.value = res.results;
+          },
+          (_err) => {},
+        );
+      };
+      getTodoTasks(1);
+      const handleClick = (id) => {
+        router.push(`/user/infomanage/task?id=${id}`);
+      };
+      return { tasks, handleClick, colors,goMore };
     },
   });
 </script>

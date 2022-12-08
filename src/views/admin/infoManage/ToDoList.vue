@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <BasicTable @register="registerTable" @edit-change="onEditChange">
+    <BasicTable @register="registerTable">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === '操作'">
           <a-button class="mr-2" @click="goToDetail(record.id)"> 前往审核 </a-button>
