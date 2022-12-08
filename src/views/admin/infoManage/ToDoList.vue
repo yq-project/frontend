@@ -40,18 +40,26 @@
       const router = useRouter();
       const data = ref([]);
       const privateList = ref([]);
-      infoListApi().then((res) => {
-        let tmp = [];
-        res.results.forEach((item) => {
-          if (item.state === 0) {
-            item.state = '待老师审核';
-            tmp.push(item);
-          }
+      const updateToDoList = (currentPage) => {
+        infoListApi(currentPage).then((res) => {
+          let tmp = [];
+          res.results.forEach((item) => {
+            if (item.state === 0) {
+              item.state = '待老师审核';
+              tmp.push(item);
+            }
+          });
+          privateList.value = tmp;
+          data.value = privateList.value;
+          setPagination({
+            total: res.count,
+            showSizeChanger: false,
+            pageSize: 10,
+          });
         });
-        privateList.value = tmp;
-        data.value = privateList.value;
-      });
-      const [registerTable] = useTable({
+      };
+      updateToDoList(1);
+      const [registerTable, { setPagination }] = useTable({
         title: '待办事务列表',
         titleHelpMessage: ['以列表的形式显示所有待办事务'],
         columns: columns,
@@ -65,7 +73,14 @@
           dataIndex: '操作',
           // slots: { customRender: 'action' },
         },
+        pagination: {
+          //@ts-ignore
+          onChange: pageChange,
+        },
       });
+      function pageChange(currentPage) {
+        updateToDoList(currentPage);
+      }
       function goToDetail(id) {
         // console.log(id);
         router.push({

@@ -11,7 +11,7 @@
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
   import { BasicTable, useTable, BasicColumn } from '/@/components/Table';
-  import {infoApi, infoListApi, infoScoreApi} from '/@/api/demo/table';
+  import { infoListApi, infoScoreApi } from '/@/api/demo/table';
   import { useMessage } from '/@/hooks/web/useMessage';
   const columns: BasicColumn[] = [
     {
@@ -78,18 +78,35 @@
     components: { BasicTable },
     setup() {
       const data = ref([]);
-      infoListApi().then((res) => {
-        data.value = res.results;
-        // console.log(res.results);
-        // console.log(data.value);
-      });
-      const [registerTable] = useTable({
+      let page = 1;
+      const updateScoreList = (currentPage) => {
+        infoListApi(currentPage).then((res) => {
+          data.value = res.results;
+          setPagination({
+            total: res.count,
+            showSizeChanger: false,
+            pageSize: 10,
+          });
+          // console.log(res.results);
+          // console.log(data.value);
+        });
+      };
+      updateScoreList(1);
+      const [registerTable, { setPagination }] = useTable({
         title: '舆情评分页',
         columns: columns,
         dataSource: data,
         showIndexColumn: false,
         bordered: true,
+        pagination: {
+          //@ts-ignore
+          onChange: pageChange,
+        },
       });
+      function pageChange(currentPage) {
+        page = currentPage;
+        updateScoreList(currentPage);
+      }
 
       const { createMessage } = useMessage();
 
@@ -125,7 +142,7 @@
               };
               // console.log(id);
               await infoScoreApi(id, params);
-              infoListApi().then((res) => {
+              infoListApi(page).then((res) => {
                 data.value = res.results;
                 // console.log(res.results);
                 // console.log(data.value);

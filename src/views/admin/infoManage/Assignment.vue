@@ -4,10 +4,10 @@
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === '操作'">
           <template v-if="record.status === '未审核'">
-            <a-button class="mr-2" @click="goToDetail"> 前往审核 </a-button>
+            <a-button class="mr-2" @click="goToDetail(record.info)"> 前往审核 </a-button>
           </template>
           <template v-else>
-            <a-button class="mr-2" @click="goToDetail"> 前往分配 </a-button>
+            <a-button class="mr-2" @click="goToDetail(record.info)"> 前往分配 </a-button>
           </template>
         </template>
       </template>
@@ -15,7 +15,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, onBeforeMount, ref } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicTable, useTable, BasicColumn } from '/@/components/Table';
 
   import { commentTaskListApi } from '/@/api/demo/table';
@@ -64,12 +64,19 @@
     setup() {
       const router = useRouter();
       const data = ref([]);
-      onBeforeMount(async () => {
-        const res = await commentTaskListApi();
-        data.value = res.results;
-      });
-      console.log(data);
-      const [registerTable] = useTable({
+      const updateAssignmentList = (currentPage) => {
+        commentTaskListApi(currentPage).then((res) => {
+          data.value = res.results;
+          setPagination({
+            total: res.count,
+            showSizeChanger: false,
+            pageSize: 10,
+          });
+        });
+      };
+      // console.log(data);
+      updateAssignmentList(1);
+      const [registerTable, { setPagination }] = useTable({
         title: '网评任务页',
         titleHelpMessage: ['以列表的形式展示所有舆情信息'],
         columns: columns,
@@ -83,10 +90,22 @@
           dataIndex: '操作',
           // slots: { customRender: 'action' },
         },
+        pagination: {
+          //@ts-ignore
+          onChange: pageChange,
+        },
       });
+      function pageChange(currentPage) {
+        updateAssignmentList(currentPage);
+      }
 
-      function goToDetail() {
-        router.push('/infoManage/infoDetail');
+      function goToDetail(id) {
+        router.push({
+          path: '/infoManage/infoDetail',
+          query: {
+            infoId: id,
+          },
+        });
       }
 
       return {

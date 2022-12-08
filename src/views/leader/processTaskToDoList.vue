@@ -13,12 +13,11 @@
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, ref } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicTable, useTable, BasicColumn } from '/@/components/Table';
 
-  import { infoApi, processTaskReadApi, processTaskListApi } from '/@/api/demo/table';
+  import { processTaskReadApi, processTaskListApi } from '/@/api/demo/table';
   import { useRouter } from 'vue-router';
-  import { useUserStore } from '/@/store/modules/user';
 
   const columns: BasicColumn[] = [
     {
@@ -57,36 +56,43 @@
       const router = useRouter();
       const data = ref([]);
       const privateList = ref([]);
-      processTaskListApi().then((res) => {
-        let tmp = [];
-        res.results.forEach((item) => {
-          // console.log(item);
-          if (item.info.department === '电院' && item.state !== 3) {
-            item.infoType = item.info.infoType;
-            item.subject = item.info.subject;
-            if (item.info.state === 2) {
-              switch (item.state) {
-                case 0:
-                  item.state = '信息未读';
-                  break;
-                case 1:
-                  item.state = '信息未反馈';
-                  break;
-                case 2:
-                  item.state = '待审核';
-                  break;
-                case 3:
-                  item.state = '审核通过';
-                  break;
+      const updateProcessTaskToDoList = (currentPage) => {
+        processTaskListApi(currentPage).then((res) => {
+          let tmp = [];
+          res.results.forEach((item) => {
+            // console.log(item);
+            if (item.info.department === '电院' && item.state !== 3) {
+              item.infoType = item.info.infoType;
+              item.subject = item.info.subject;
+              if (item.info.state === 2) {
+                switch (item.state) {
+                  case 0:
+                    item.state = '信息未读';
+                    break;
+                  case 1:
+                    item.state = '信息未反馈';
+                    break;
+                  case 2:
+                    item.state = '待审核';
+                    break;
+                  case 3:
+                    item.state = '审核通过';
+                    break;
+                }
               }
+              tmp.push(item);
             }
-            tmp.push(item);
-          }
+          });
+          privateList.value = tmp;
+          data.value = privateList.value;
+          setPagination({
+            total: res.count,
+            showSizeChanger: false,
+            pageSize: 10,
+          });
         });
-        privateList.value = tmp;
-        data.value = privateList.value;
-      });
-      const [registerTable] = useTable({
+      };
+      const [registerTable, { setPagination }] = useTable({
         title: '待办任务列表',
         titleHelpMessage: ['以列表的形式展示所有负责的未审核通过的舆情信息'],
         columns: columns,
@@ -100,7 +106,14 @@
           dataIndex: '操作',
           // slots: { customRender: 'action' },
         },
+        pagination: {
+          //@ts-ignore
+          onChange: pageChange,
+        },
       });
+      function pageChange(currentPage) {
+        updateProcessTaskToDoList(currentPage);
+      }
 
       function goToDetail(info) {
         // console.log(info.info.subject);

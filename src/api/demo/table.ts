@@ -1,6 +1,6 @@
-import { defHttp, basicHttp, authHttp } from '/@/utils/http/axios';
-import { DemoParams, DemoListGetResultModel } from './model/tableModel';
-import { ErrorMessageMode } from '/#/axios';
+import {authHttp, basicHttp, defHttp} from '/@/utils/http/axios';
+import {DemoListGetResultModel, DemoParams} from './model/tableModel';
+import {ErrorMessageMode} from '/#/axios';
 
 enum Api {
   DEMO_LIST = '/table/getDemoList',
@@ -39,7 +39,7 @@ export const demoListApi2 = (params: DemoParams) =>
 export function infoListApi(pageIndex: number, mode: ErrorMessageMode = 'modal') {
   return basicHttp.get(
     {
-      url: Api.INFO_LIST2 + `/?page=${pageIndex}` + '&format=json',
+      url: Api.INFO_LIST2 + `/?page=${pageIndex}`,
     },
     {
       errorMessageMode: mode,
@@ -47,10 +47,10 @@ export function infoListApi(pageIndex: number, mode: ErrorMessageMode = 'modal')
   );
 }
 
-export function processTaskListApi(mode: ErrorMessageMode = 'modal') {
+export function processTaskListApi(pageIndex: number, mode: ErrorMessageMode = 'modal') {
   return basicHttp.get(
     {
-      url: Api.PROCESS_TASK_LIST,
+      url: Api.PROCESS_TASK_LIST + `/?page=${pageIndex}`,
     },
     {
       errorMessageMode: mode,
@@ -65,7 +65,7 @@ export function processTaskListApi(mode: ErrorMessageMode = 'modal') {
 export function infoApi(param, mode: ErrorMessageMode = 'modal') {
   return basicHttp.get(
     {
-      url: Api.INFO_LIST2 + '/' + param + '/?format=json',
+      url: Api.INFO_LIST2 + '/' + param + '/',
     },
     {
       errorMessageMode: mode,
@@ -76,7 +76,7 @@ export function infoApi(param, mode: ErrorMessageMode = 'modal') {
 export function infoCloseApi(param, mode: ErrorMessageMode = 'modal') {
   return basicHttp.post(
     {
-      url: Api.INFO_LIST2 + '/' + param + '/close/?format=json',
+      url: Api.INFO_LIST2 + '/' + param + '/close/',
     },
     {
       errorMessageMode: mode,
@@ -87,7 +87,7 @@ export function infoCloseApi(param, mode: ErrorMessageMode = 'modal') {
 export function infoScoreApi(id, params, mode: ErrorMessageMode = 'modal') {
   return basicHttp.put(
     {
-      url: Api.INFO_LIST2 + '/' + id + '/score/?format=json',
+      url: Api.INFO_LIST2 + '/' + id + '/score/',
       params,
     },
     {
@@ -99,7 +99,7 @@ export function infoScoreApi(id, params, mode: ErrorMessageMode = 'modal') {
 export function infoAdviceApi(id, params, mode: ErrorMessageMode = 'modal') {
   return basicHttp.put(
     {
-      url: Api.INFO_LIST2 + '/' + id + '/advise/?format=json',
+      url: Api.INFO_LIST2 + '/' + id + '/advise/',
       params,
     },
     {
@@ -111,7 +111,7 @@ export function infoAdviceApi(id, params, mode: ErrorMessageMode = 'modal') {
 export function infoPassApi(param, mode: ErrorMessageMode = 'modal') {
   return basicHttp.post(
     {
-      url: Api.INFO_LIST2 + '/' + param + '/pass_info/?format=json',
+      url: Api.INFO_LIST2 + '/' + param + '/pass_info/',
     },
     {
       errorMessageMode: mode,
@@ -122,7 +122,7 @@ export function infoPassApi(param, mode: ErrorMessageMode = 'modal') {
 export function processTaskPassApi(param, mode: ErrorMessageMode = 'modal') {
   return basicHttp.post(
     {
-      url: Api.PROCESS_TASK_LIST + '/' + param + '/pass_task/?format=json',
+      url: Api.PROCESS_TASK_LIST + '/' + param + '/pass_task/',
     },
     {
       errorMessageMode: mode,
@@ -133,7 +133,7 @@ export function processTaskPassApi(param, mode: ErrorMessageMode = 'modal') {
 export function processTaskReadApi(id, params, mode: ErrorMessageMode = 'modal') {
   return basicHttp.post(
     {
-      url: Api.PROCESS_TASK_LIST + '/' + id + '/read_task/?format=json',
+      url: Api.PROCESS_TASK_LIST + '/' + id + '/read_task/',
       params,
     },
     {
@@ -145,7 +145,7 @@ export function processTaskReadApi(id, params, mode: ErrorMessageMode = 'modal')
 export function processTaskFeedbackApi(id, params, mode: ErrorMessageMode = 'modal') {
   return basicHttp.put(
     {
-      url: Api.PROCESS_TASK_LIST + '/' + id + '/feedback/?format=json',
+      url: Api.PROCESS_TASK_LIST + '/' + id + '/feedback/',
       params,
     },
     {
@@ -157,7 +157,7 @@ export function processTaskFeedbackApi(id, params, mode: ErrorMessageMode = 'mod
 export function processTaskApi(param, mode: ErrorMessageMode = 'modal') {
   return basicHttp.get(
     {
-      url: Api.PROCESS_TASK_LIST + '/' + param + '/?format=json',
+      url: Api.PROCESS_TASK_LIST + '/' + param + '/',
     },
     {
       errorMessageMode: mode,
@@ -165,10 +165,10 @@ export function processTaskApi(param, mode: ErrorMessageMode = 'modal') {
   );
 }
 
-export function commentTaskListApi(mode: ErrorMessageMode = 'modal') {
+export function commentTaskListApi(pageIndex: number, mode: ErrorMessageMode = 'modal') {
   return basicHttp.get(
     {
-      url: Api.COMMENT_TASK_LIST,
+      url: Api.COMMENT_TASK_LIST + `?page=${pageIndex}`,
     },
     {
       errorMessageMode: mode,
@@ -177,13 +177,12 @@ export function commentTaskListApi(mode: ErrorMessageMode = 'modal') {
 }
 
 export function userListApi(pageIndex: number, mode: ErrorMessageMode = 'modal') {
-  const response = authHttp.get(
+  return authHttp.get(
     {
-      url: Api.USER_LIST + `?page=${pageIndex}` + '&format=json',
+      url: Api.USER_LIST + `?page=${pageIndex}`,
     },
     {
       errorMessageMode: mode,
     },
   );
-  return response;
 }
