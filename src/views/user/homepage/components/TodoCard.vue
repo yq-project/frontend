@@ -37,7 +37,7 @@
         getTodoTaskListApi(page).then(
           (res) => {
             if (res.results.length > 6) {
-              res.results.splice(6, res.results.length - 6);
+              res.results.splice(6, res.results.length - 6); //首页只显示前6条
             }
             res.results.forEach((item, index) => {
               let date = new Date(item.created_at);

@@ -36,6 +36,7 @@ export interface UserInfo {
   role: any[];
   number: string;
   homePath: string;
+  read: boolean;
 }
 
 export interface BeforeMiniState {
