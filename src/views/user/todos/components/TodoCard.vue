@@ -15,13 +15,13 @@
   </Card>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, Ref } from 'vue';
-  import { Card } from 'ant-design-vue';
-  import { Icon } from '/@/components/Icon';
-  import { useRouter } from 'vue-router';
-  import { getTodoTaskListApi } from '/@/api/sys/commentTask';
+import {defineComponent, ref, Ref} from 'vue';
+import {Card} from 'ant-design-vue';
+import {Icon} from '/@/components/Icon';
+import {useRouter} from 'vue-router';
+import {getTodoTaskListApi} from '/@/api/sys/commentTask';
 
-  export default defineComponent({
+export default defineComponent({
     components: { Card, CardGrid: Card.Grid, Icon },
     setup() {
       const router = useRouter();
@@ -32,10 +32,9 @@
           (res) => {
             res.results.forEach((item, index) => {
               let date = new Date(item.created_at);
-              let format = `${date.getFullYear()}年${
+              item.created_at = `${date.getFullYear()}年${
                 date.getMonth() + 1
               }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
-              item.created_at = format;
               item.color = colors[index % 5];
             });
             tasks.value = res.results;
