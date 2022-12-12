@@ -16,11 +16,12 @@
   ></BasicTable>
 </template>
 <script lang="ts" setup>
-  import { ref } from 'vue';
-  import { BasicTable, useTable, TableAction, BasicColumn } from '/@/components/Table';
-  import { getTaskListApi } from '/@/api/sys/commentTask';
-  import { commentTaskStateMap } from '/@/enums/infoStateEnum';
-  const data = ref([]);
+import {ref} from 'vue';
+import {BasicColumn, BasicTable, TableAction, useTable} from '/@/components/Table';
+import {getTaskListApi} from '/@/api/sys/commentTask';
+import {commentTaskStateMap} from '/@/enums/infoStateEnum';
+
+const data = ref([]);
   const actionColumn = {
     width: 120,
     title: 'Action',
@@ -54,10 +55,9 @@
         // item.creator = '管理员';
         item.subject = '舆情标题';
         let date = new Date(item.created_at);
-        let format = `${date.getFullYear()}年${
+        item.created_at = `${date.getFullYear()}年${
           date.getMonth() + 1
         }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
-        item.created_at = format;
         item.state = commentTaskStateMap.get(item.state);
       });
       count.value = res.count;
