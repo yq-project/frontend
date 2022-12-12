@@ -2,13 +2,13 @@
   <PageWrapper :title="title" contentBackground>
     <template v-if="state === 1" #extra>
       <a-button @click="back"> 返回 </a-button>
-      <a-button class="my-4" @click="send"> 退回修改 </a-button>
+      <a-button class="my-4" @click="handleRefunded"> 退回修改 </a-button>
       <a-button @click="close"> 中止流程 </a-button>
       <a-button type="primary" @click="pass"> 审核通过 </a-button>
     </template>
     <template v-else-if="state === 2" #extra>
       <a-button @click="back"> 返回 </a-button>
-      <a-button> 发布任务 </a-button>
+      <a-button @click="handleAllocate"> 发布任务 </a-button>
       <a-button v-if="processTaskState === 2" type="primary" @click="passProcessTask">
         审核通过
       </a-button>
@@ -86,7 +86,8 @@
         </a-descriptions-item>
       </a-card>
     </div>
-    <Modal4 @register="register4" :update="update" />
+    <RefundedModal @register="registerRefundedModal" :update="update" />
+    <AllocateModal @register="registerAllocateModal" :update="update" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -101,7 +102,8 @@
     infoCloseApi,
     processTaskPassApi,
   } from '/@/api/demo/table';
-  import Modal4 from './Modal4.vue';
+  import RefundedModal from './RefundedModal.vue';
+  import AllocateModal from './AllocateModal.vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useModal } from '/@/components/Modal';
 
@@ -116,7 +118,8 @@
       [Steps.Step.name]: Steps.Step,
       [Tabs.name]: Tabs,
       [Tabs.TabPane.name]: Tabs.TabPane,
-      Modal4,
+      RefundedModal,
+      AllocateModal,
     },
     setup() {
       const data = ref([]);
@@ -127,10 +130,11 @@
       const title = computed(() => {
         return '舆情主题：' + data.value.subject;
       });
-      const [register4, { openModal: openModal4 }] = useModal();
+      const [registerRefundedModal, { openModal: openRefundedModal }] = useModal();
+      const [registerAllocateModal, { openModal: openAllocateModal }] = useModal();
       const callback = (res) => {
         data.value = res;
-        console.log(data.value);
+        // console.log(data.value);
         if (data.value.state == 2) {
           processTaskApi(data.value.process_id).then((res) => {
             processTaskData.value = res;
@@ -139,20 +143,7 @@
       };
       infoApi(param).then(callback);
       const processTaskState = computed(() => {
-        switch (
-          processTaskData.value.state //老师审核通过，待二级领导反馈
-        ) {
-          case 0:
-            return 0;
-          case 1:
-            return 1;
-          case 2:
-            return 2;
-          case 3:
-            return 3;
-          default:
-            return 0;
-        }
+        return processTaskData.value.state; //老师审核通过，待二级领导反馈
       });
       const state = computed(() => {
         switch (data.value.state) {
@@ -166,6 +157,8 @@
             return 3; //老师结束流程
           case 4:
             return 4; //学生撤回信息
+          default:
+            return 1;
         }
       });
       function back() {
@@ -200,8 +193,15 @@
       function update() {
         infoApi(param).then(callback);
       }
-      function send() {
-        openModal4(true, {
+      function handleRefunded() {
+        openRefundedModal(true, {
+          data: param,
+          info: data.value.advice,
+        });
+      }
+
+      function handleAllocate() {
+        openAllocateModal(true, {
           data: param,
           info: data.value.advice,
         });
@@ -219,9 +219,10 @@
         passProcessTask,
         close,
         back,
-        send,
-        register4,
-        openModal4,
+        handleRefunded,
+        handleAllocate,
+        registerRefundedModal,
+        registerAllocateModal,
       };
     },
   });

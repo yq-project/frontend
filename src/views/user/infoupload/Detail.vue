@@ -29,7 +29,7 @@
   import { BasicUpload } from '/@/components/Upload';
   import { uploadApi } from '/@/api/sys/upload';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { getInfoApi } from '/@/api/sys/info';
+  import { createInfoApi, getInfoApi } from '/@/api/sys/info';
   import { useRouter, useRoute } from 'vue-router';
   import { ImagePreview } from '/@/components/Preview/index';
 

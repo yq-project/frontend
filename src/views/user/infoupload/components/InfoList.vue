@@ -19,9 +19,10 @@
 <script lang="ts" setup>
   import { useRouter } from 'vue-router';
   import { ref } from 'vue';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicColumn, BasicTable, TableAction, useTable } from '/@/components/Table';
   import { getInfoListApi } from '/@/api/sys/info';
   import { stateMap } from '/@/enums/infoStateEnum';
+
   const actionColumn = {
     width: 120,
     title: 'Action',
@@ -66,10 +67,9 @@
       res.results.forEach((item) => {
         item.state = stateMap.get(item.state);
         let date = new Date(item.created_at);
-        let format = `${date.getFullYear()}年${
+        item.created_at = `${date.getFullYear()}年${
           date.getMonth() + 1
         }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
-        item.created_at = format;
       });
       count.value = res.count;
       data.value = res.results;
@@ -87,5 +87,4 @@
   function handleDetail(record) {
     router.push(`/user/infomanage/detail?id=${record.id}`);
   }
-  
 </script>

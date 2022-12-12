@@ -43,7 +43,7 @@
     // console.log(res.result);
     res.result.forEach((item) => {
       let index;
-      index = datedifference(thisWeek, item.time.slice(0, 10));
+      index = datedifference(lastWeek, item.time.slice(0, 10));
       data[index] = item.count;
     });
     setOptions({

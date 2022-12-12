@@ -45,7 +45,7 @@
         </a-descriptions-item>
       </a-card>
     </div>
-    <Modal4 @register="register4" :update="update" />
+    <FeedbackModal @register="register4" :update="update" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -53,7 +53,7 @@
   import { PageWrapper } from '/@/components/Page';
   import { Card, Descriptions, Divider, Steps, Tabs } from 'ant-design-vue';
   import { processTaskApi } from '/@/api/demo/table';
-  import Modal4 from './FeedbackModal.vue';
+  import FeedbackModal from './FeedbackModal.vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useModal } from '/@/components/Modal';
 
@@ -68,7 +68,7 @@
       [Steps.Step.name]: Steps.Step,
       [Tabs.name]: Tabs,
       [Tabs.TabPane.name]: Tabs.TabPane,
-      Modal4,
+      FeedbackModal,
     },
     setup() {
       const data = ref([]);

@@ -26,17 +26,12 @@
     {
       title: '上传时间',
       width: 150,
-      // sorter: true,
       dataIndex: 'created_at',
     },
     {
       title: '上传用户',
       dataIndex: 'creator',
       width: 150,
-      // filters: [
-      //   { text: 'Male', value: 'male' },
-      //   { text: 'Female', value: 'female' },
-      // ],
     },
     {
       title: '当前评分',
@@ -81,14 +76,18 @@
       let page = 1;
       const updateScoreList = (currentPage) => {
         infoListApi(currentPage).then((res) => {
+          res.results.forEach((item) => {
+            let date = new Date(item.created_at);
+            item.created_at = `${date.getFullYear()}年${
+              date.getMonth() + 1
+            }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
+          });
           data.value = res.results;
           setPagination({
             total: res.count,
             showSizeChanger: false,
             pageSize: 10,
           });
-          // console.log(res.results);
-          // console.log(data.value);
         });
       };
       updateScoreList(1);

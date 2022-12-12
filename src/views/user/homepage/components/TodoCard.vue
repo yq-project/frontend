@@ -1,6 +1,6 @@
 <template>
   <Card title="待办事务" v-bind="$attrs">
-  <template #extra>
+    <template #extra>
       <a-button type="link" size="small" @click="goMore">更多</a-button>
     </template>
     <template v-for="item in tasks" :key="item">
@@ -28,23 +28,22 @@
     components: { Card, CardGrid: Card.Grid, Icon },
     setup() {
       const router = useRouter();
-      const goMore=()=>{
-        router.push("/user/infomanage/todos");
-      }
+      const goMore = () => {
+        router.push('/user/infomanage/todos');
+      };
       const tasks: Ref<any[]> = ref([]);
       const colors = ['#00d8ff', '#3fb27f', '#e18525', '#bf0c2c', ''];
       const getTodoTasks = (page) => {
         getTodoTaskListApi(page).then(
           (res) => {
-            if(res.results.length>6){
-              res.results.splice(6,res.results.length-6);
+            if (res.results.length > 6) {
+              res.results.splice(6, res.results.length - 6);
             }
             res.results.forEach((item, index) => {
               let date = new Date(item.created_at);
-              let format = `${date.getFullYear()}年${
+              item.created_at = `${date.getFullYear()}年${
                 date.getMonth() + 1
               }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
-              item.created_at = format;
               item.color = colors[index % 5];
             });
             tasks.value = res.results;
@@ -56,7 +55,7 @@
       const handleClick = (id) => {
         router.push(`/user/infomanage/task?id=${id}`);
       };
-      return { tasks, handleClick, colors,goMore };
+      return { tasks, handleClick, colors, goMore };
     },
   });
 </script>

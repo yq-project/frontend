@@ -2,7 +2,7 @@
   <BasicModal
     v-bind="$attrs"
     @register="register"
-    title="填写反馈"
+    title="退回修改"
     @visible-change="handleVisibleChange"
     @ok="handleSubmit"
   >
@@ -14,21 +14,21 @@
 <script lang="ts">
   import { defineComponent, ref, nextTick } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
-  import { BasicForm, FormSchema, useForm } from '/@/components/Form';
-  import { processTaskFeedbackApi } from '/@/api/demo/table';
+  import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
+  import { infoAdviceApi } from '/@/api/demo/table';
   const schemas: FormSchema[] = [
     {
       field: 'field1',
       component: 'Input',
-      label: '反馈处理',
+      label: '修改意见',
       colProps: {
         span: 24,
       },
-      defaultValue: '请输入你的反馈情况',
+      defaultValue: '请输入你的修改意见',
     },
   ];
   export default defineComponent({
-    name: 'FeedbackModal',
+    name: 'RefundedModal',
     components: { BasicModal, BasicForm },
     props: {
       userData: { type: Object },
@@ -43,8 +43,6 @@
         registerForm,
         {
           validate,
-          // setFieldsValue,
-          // setProps
         },
       ] = useForm({
         labelWidth: 120,
@@ -62,18 +60,7 @@
       function onDataReceive(data) {
         console.log('Data Received', data);
         id = data.data;
-        // 方式1;
-        // setFieldsValue({
-        //   field2: data.data,
-        //   field1: data.info,
-        // });
-
-        // // 方式2
         modelRef.value = { field2: data.data, field1: data.info };
-
-        // setProps({
-        //   model:{ field2: data.data, field1: data.info }
-        // })
       }
 
       function handleVisibleChange(v) {
@@ -85,10 +72,9 @@
         console.log(id);
         console.log(value.field1);
         const param = {
-          feedback: value.field1,
+          advice: value.field1,
         };
-        console.log(param);
-        await processTaskFeedbackApi(id, param);
+        await infoAdviceApi(id, param);
         props.update();
         closeModal();
       }

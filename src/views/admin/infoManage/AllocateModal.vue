@@ -2,7 +2,7 @@
   <BasicModal
     v-bind="$attrs"
     @register="register"
-    title="退回修改"
+    title="网评任务分配"
     @visible-change="handleVisibleChange"
     @ok="handleSubmit"
   >
@@ -20,14 +20,37 @@
     {
       field: 'field1',
       component: 'Input',
-      label: '修改意见',
+      label: '指导意见',
       colProps: {
         span: 24,
       },
-      defaultValue: '请输入你的修改意见',
+      defaultValue: '请输入指导意见',
+    },
+    {
+      field: 'field2',
+      component: 'TreeSelect',
+      label: '成员分配',
+      defaultValue: '请选择成员',
+      required: true,
+    },
+    {
+      field: 'parentDept',
+      label: '上级部门',
+      component: 'TreeSelect',
+
+      componentProps: {
+        fieldNames: {
+          label: 'deptName',
+          key: 'id',
+          value: 'id',
+        },
+        getPopupContainer: () => document.body,
+      },
+      required: true,
     },
   ];
   export default defineComponent({
+    name: 'AllocateModal',
     components: { BasicModal, BasicForm },
     props: {
       userData: { type: Object },
@@ -38,14 +61,7 @@
     setup(props) {
       let id = 0;
       const modelRef = ref({});
-      const [
-        registerForm,
-        {
-          validate,
-          // setFieldsValue,
-          // setProps
-        },
-      ] = useForm({
+      const [registerForm, { validate }] = useForm({
         labelWidth: 120,
         schemas,
         showActionButtonGroup: false,
@@ -61,18 +77,7 @@
       function onDataReceive(data) {
         console.log('Data Received', data);
         id = data.data;
-        // 方式1;
-        // setFieldsValue({
-        //   field2: data.data,
-        //   field1: data.info,
-        // });
-
-        // // 方式2
         modelRef.value = { field2: data.data, field1: data.info };
-
-        // setProps({
-        //   model:{ field2: data.data, field1: data.info }
-        // })
       }
 
       function handleVisibleChange(v) {

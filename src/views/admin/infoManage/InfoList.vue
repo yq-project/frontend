@@ -69,6 +69,10 @@
       const updateInfoList = (currentPage) => {
         infoListApi(currentPage).then((res) => {
           res.results.forEach((item) => {
+            let date = new Date(item.created_at);
+            item.created_at = `${date.getFullYear()}年${
+              date.getMonth() + 1
+            }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
             switch (item.state) {
               case 0:
                 item.state = '待老师审核';
