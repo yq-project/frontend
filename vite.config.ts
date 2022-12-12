@@ -62,13 +62,13 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       // Load proxy configuration from .env
       proxy: {
         '/auth': {
-          target: 'http://10.119.4.98:8000/',
+          target: 'http://10.119.9.180/',
           rewrite: (path) => {
             return path;
           },
         },
         '/api': {
-          target: 'http://10.119.4.98:8000/',
+          target: 'http://10.119.9.180/',
           rewrite: (path) => {
             return path;
           },
