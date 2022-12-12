@@ -5,6 +5,8 @@
   import { onMounted, ref, Ref } from 'vue';
   import { useECharts } from '/@/hooks/web/useECharts';
   import { basicProps } from './props';
+  import moment from 'moment';
+  import {infoStatisticApi} from "/@/api/demo/table";
 
   defineProps({
     ...basicProps,
@@ -12,7 +14,36 @@
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
-  onMounted(() => {
+
+  function getStartOfYear(index) {
+    return moment(
+      moment()
+        .year(moment().year() - index)
+        .startOf('year')
+        .valueOf(),
+    ).format('YYYY-MM-DD');
+  }
+
+  function getLastTime(N) {
+    return moment(new Date().getTime() - N * 1000 * 24 * 60 * 60).format('YYYY-MM-DD');
+  }
+
+  const data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  // const lastYear = getStartOfYear(1);
+  // const thisYear = getStartOfYear(0);
+  const start = getLastTime(365);
+
+  infoStatisticApi('time', 'month', start + 'T00:00:00', '').then((res) => {
+    res.result.forEach((item) => {
+      let index;
+      if (item.time[5] == '0') {
+        index = item.time[6];
+      } else {
+        index = item.time[5] + item.time[6];
+      }
+      index -= 1;
+      data[index] = item.count;
+    });
     setOptions({
       tooltip: {
         trigger: 'axis',
@@ -43,12 +74,12 @@
       },
       yAxis: {
         type: 'value',
-        max: 300,
-        splitNumber: 4,
+        max: Math.ceil(Math.max.apply(null, data) * 1.2 + 1),
+        splitNumber: (Math.ceil(Math.max.apply(null, data) * 1.2 + 1) % 4) + 1,
       },
       series: [
         {
-          data: [150, 100, 160, 250, 160, 220, 160, 110, 150, 250, 290, 160, 240],
+          data: data,
           type: 'bar',
           barMaxWidth: 80,
         },

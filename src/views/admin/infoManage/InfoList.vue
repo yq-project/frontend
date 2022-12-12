@@ -77,7 +77,20 @@
                 item.state = '待学生重新提交';
                 break;
               case 2:
-                item.state = '审核通过';
+                switch (item.process_state) {
+                  case 0:
+                    item.state = '待二级领导阅读';
+                    break;
+                  case 1:
+                    item.state = '待二级领导反馈';
+                    break;
+                  case 2:
+                    item.state = '待老师审核';
+                    break;
+                  case 3:
+                    item.state = '审核通过';
+                    break;
+                }
                 break;
               case 3:
                 item.state = '老师终止流程';

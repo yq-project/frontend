@@ -17,7 +17,7 @@
         <a-descriptions-item label="备注"> {{ infoData.tip }} </a-descriptions-item>
       </a-descriptions>
       <a-card title="流程进度" :bordered="false">
-        <a-steps :current="data.state" progress-dot size="small">
+        <a-steps :current="state" progress-dot size="small">
           <a-step title="收到信息">
             <template #description>
               <p>{{ infoData.created_at }}</p>
@@ -52,7 +52,7 @@
   import { computed, defineComponent, ref } from 'vue';
   import { PageWrapper } from '/@/components/Page';
   import { Card, Descriptions, Divider, Steps, Tabs } from 'ant-design-vue';
-  import { infoApi, processTaskApi } from '/@/api/demo/table';
+  import { processTaskApi } from '/@/api/demo/table';
   import Modal4 from './FeedbackModal.vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useModal } from '/@/components/Modal';
@@ -76,6 +76,10 @@
       const route = useRoute();
       const router = useRouter();
       const param = route.query.infoId;
+      const state = computed(() => {
+        if (data.value.state != 3) return data.value.state;
+        else return data.value.state + 1;
+      });
       const title = computed(() => {
         return '舆情主题：' + infoData.value.subject;
       });
@@ -83,7 +87,7 @@
       const callback = (res) => {
         data.value = res;
         infoData.value = data.value.info;
-        // console.log(infoData);
+        console.log(data.value.state);
       };
       processTaskApi(param).then(callback);
       function back() {
@@ -93,7 +97,7 @@
         window.open(url, '_blank'); // 新窗口打开外链接
       }
       function update() {
-        infoApi(param).then(callback);
+        processTaskApi(param).then(callback);
       }
       function send() {
         openModal4(true, {
@@ -104,6 +108,7 @@
       return {
         update,
         linkDownload,
+        state,
         title,
         data,
         infoData,

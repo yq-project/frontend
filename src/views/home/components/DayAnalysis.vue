@@ -2,9 +2,11 @@
   <div ref="chartRef" :style="{ height, width }"></div>
 </template>
 <script lang="ts" setup>
-  import { onMounted, ref, Ref } from 'vue';
+  import { ref, Ref } from 'vue';
   import { useECharts } from '/@/hooks/web/useECharts';
   import { basicProps } from './props';
+  import moment from 'moment';
+  import { infoStatisticApi } from '/@/api/demo/table';
 
   defineProps({
     ...basicProps,
@@ -12,7 +14,21 @@
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
 
-  onMounted(() => {
+  const data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const today = getLastTime(0);
+  const lastDay = getLastTime(1);
+
+  infoStatisticApi('time', 'hour', lastDay + 'T00:00:00', today + 'T00:00:00').then((res) => {
+    res.result.forEach((item) => {
+      let index;
+      if (item.time[11] == '0') {
+        index = item.time[12];
+      } else {
+        index = item.time[11] + item.time[12];
+      }
+      data[index] = item.count;
+    });
+
     setOptions({
       tooltip: {
         trigger: 'axis',
@@ -27,6 +43,12 @@
         type: 'category',
         boundaryGap: false,
         data: [
+          '0:00',
+          '1:00',
+          '2:00',
+          '3:00',
+          '4:00',
+          '5:00',
           '6:00',
           '7:00',
           '8:00',
@@ -61,8 +83,8 @@
       yAxis: [
         {
           type: 'value',
-          max: 3,
-          splitNumber: 4,
+          max: Math.ceil(Math.max.apply(null, data) * 1.2 + 1),
+          splitNumber: (Math.ceil(Math.max.apply(null, data) * 1.2 + 1) % 4) + 1,
           axisTick: {
             show: false,
           },
@@ -78,7 +100,7 @@
       series: [
         {
           smooth: true,
-          data: [0, 0, 0, 1, 0, 2, 0, 0, 0, 1, 0, 2, 0, 1, 1, 0, 0, 0],
+          data: data,
           type: 'line',
           areaStyle: {},
           itemStyle: {
@@ -88,4 +110,8 @@
       ],
     });
   });
+
+  function getLastTime(N) {
+    return moment(new Date().getTime() - N * 1000 * 24 * 60 * 60).format('YYYY-MM-DD');
+  }
 </script>
