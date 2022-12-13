@@ -27,8 +27,8 @@ export default defineComponent({
       const router = useRouter();
       const tasks: Ref<any[]> = ref([]);
       const colors = ['#00d8ff', '#3fb27f', '#e18525', '#bf0c2c', ''];
-      const getTodoTasks = (page) => {
-        getTodoTaskListApi(page).then(
+      const getTodoTasks = () => {
+        getTodoTaskListApi().then(
           (res) => {
             res.results.forEach((item, index) => {
               let date = new Date(item.created_at);
@@ -42,7 +42,7 @@ export default defineComponent({
           (_err) => {},
         );
       };
-      getTodoTasks(1);
+      getTodoTasks();
       const handleClick = (id) => {
         router.push(`/user/infomanage/task?id=${id}`);
       };

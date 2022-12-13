@@ -20,6 +20,7 @@ import {ref} from 'vue';
 import {BasicColumn, BasicTable, TableAction, useTable} from '/@/components/Table';
 import {getTaskListApi} from '/@/api/sys/commentTask';
 import {commentTaskStateMap} from '/@/enums/infoStateEnum';
+import { useRouter } from 'vue-router';
 
 const data = ref([]);
   const actionColumn = {
@@ -48,6 +49,7 @@ const data = ref([]);
   function pageChange(_currentPage, _pageSize) {
     //
   }
+  const router = useRouter();
 
   const getTaskList = (pageIndex) => {
     getTaskListApi(pageIndex).then((res) => {
@@ -81,7 +83,7 @@ const data = ref([]);
       onChange: pageChange,
     },
   });
-  function handleDetail(_record) {
-    console.log(_record);
+  const handleDetail=(record)=> {
+    router.push(`/user/infomanage/task?id=${record.id}`);
   }
 </script>
