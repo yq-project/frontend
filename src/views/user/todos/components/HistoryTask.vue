@@ -46,9 +46,6 @@ const data = ref([]);
     },
   ];
   const count = ref(0);
-  function pageChange(_currentPage, _pageSize) {
-    //
-  }
   const router = useRouter();
 
   const getTaskList = (pageIndex) => {
@@ -73,6 +70,9 @@ const data = ref([]);
     });
   };
   getTaskList(1);
+  function pageChange(currentPage, _pageSize) {
+    getTaskList(currentPage)
+  }
   const [registerTable, { setPagination }] = useTable({
     title: '全部事务',
     dataSource: data,
