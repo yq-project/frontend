@@ -1,8 +1,8 @@
 <template>
   <PageWrapper title="网评任务详情" contentBackground>
     <template #extra>
-      <Button @click="cancel"> 返回 </Button>
-      <Button type="primary"  @click="handleSubmit">提交</Button>
+      <a-button @click="cancel"> 返回 </a-button>
+      <a-button type="primary"  @click="handleSubmit">提交</a-button>
     </template>
     <div class="pt-4 m-4 desc-wrap">
       <a-descriptions size="small" :column="2">
