@@ -2,6 +2,7 @@
   <PageWrapper title="舆情信息详情">
     <template #extra>
       <a-button @click="cancel"> 返回 </a-button>
+      <a-button @click="handleSubmit"> 修改 </a-button>
     </template>
     <a-card :bordered="false">
       <BasicForm @register="register" />
@@ -29,7 +30,7 @@
   import { BasicUpload } from '/@/components/Upload';
   import { uploadApi } from '/@/api/sys/upload';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { createInfoApi, getInfoApi } from '/@/api/sys/info';
+  import { updateInfoApi, getInfoApi } from '/@/api/sys/info';
   import { useRouter, useRoute } from 'vue-router';
   import { ImagePreview } from '/@/components/Preview/index';
 
@@ -45,16 +46,26 @@
         schemas: schemas,
         showActionButtonGroup: false,
       });
-      async function submitAll() {
-        const data = await validate();
+      async function handleSubmit() {
+        const formdata = await validate();
+        let data:any={}
+        data.subject=formdata.subject
+        data.content=formdata.content
+        data.department=formdata.department
+        data.infoUrl=formdata.infoUrl
+        data.infoType=formdata.infoType
+        data.tip=formdata.tip
         if (imageList.value.length == 1) {
           data.picture = imageList.value[0];
-          createInfoApi(data).then((_res) => {
-            createMessage.success(`信息已上传至系统`);
+          updateInfoApi(parseInt(route.query.id as string),data).then((_res) => {
+            createMessage.success(`信息已更新`);
             router.push('/user/infomanage/upload');
           });
         } else {
-          createMessage.error('未上传截图');
+          updateInfoApi(parseInt(route.query.id as string),data).then((_res) => {
+            createMessage.success(`信息已更新`);
+            router.push('/user/infomanage/upload');
+          });
         }
       }
       const cancel = () => {
@@ -65,6 +76,7 @@
       const imageUrl = ref('');
       const handleChange = (list: string[]) => {
         imageList.value = list;
+        showImg.value=false;
         createMessage.info(`截图已保存`);
       };
       if (route.query.id) {
@@ -76,7 +88,7 @@
       } else {
         router.push('/user/infomanage/upload');
       }
-      return { showImg, imageUrl, submitAll, register, uploadApi, handleChange, cancel, imageList };
+      return { showImg, imageUrl, handleSubmit, register, uploadApi, handleChange, cancel, imageList };
     },
   });
 </script>
