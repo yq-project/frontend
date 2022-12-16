@@ -1,19 +1,21 @@
 <template>
   <div ref="chartRef" :style="{ height, width }"></div>
 </template>
-<script lang="ts">
+<!-- <script lang="ts">
   import { basicProps } from './props';
-</script>
+</script> -->
 <script lang="ts" setup>
   import { onMounted, ref, Ref } from 'vue';
   import { useECharts } from '/@/hooks/web/useECharts';
 
-  defineProps({
-    ...basicProps,
-  });
+  // defineProps({
+  //   ...basicProps,
+  // });
 
   const chartRef = ref<HTMLDivElement | null>(null);
   const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
+  const category = [];
+
   onMounted(() => {
     setOptions({
       tooltip: {
@@ -28,18 +30,18 @@
       grid: { left: '1%', right: '1%', top: '2  %', bottom: 0, containLabel: true },
       xAxis: {
         type: 'category',
-        data: ['1', '2', '3'],
+        data: category,
       },
       yAxis: {
         type: 'value',
-        max: 8000,
-        splitNumber: 4,
+        max: 100,
+        splitNumber: 5,
       },
       series: [
         {
-          data: [3000, 2000, 3333],
+          data: [10, 20, 30, 40],
           type: 'bar',
-          barMaxWidth: 80,
+          barMaxWidth: 50,
         },
       ],
     });
