@@ -12,3 +12,12 @@ export const getBroadcastListApi = (pageIndex: number) =>
       ignoreCancelToken: true,
     },
   });
+
+export const readLatestBroadCastApi = (id: number) =>
+basicHttp.post({
+  url: Api.GETBROADCASTLIST + `${id}/read_latest/`,
+  headers: {
+    // @ts-ignore
+    ignoreCancelToken: true,
+  },
+});

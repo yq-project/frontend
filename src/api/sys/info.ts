@@ -5,6 +5,7 @@ enum Api {
   CREATE = '/info/',
   GETLIST = '/info/',
   GET = '/info/',
+  UPDATE = '/info/',
 }
 
 export function createInfoApi(params, mode: ErrorMessageMode = 'modal') {
@@ -34,6 +35,18 @@ export function getInfoApi(id: number, mode: ErrorMessageMode = 'modal') {
   return basicHttp.get(
     {
       url: Api.GET + `${id}/`,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+export function updateInfoApi(id: number,params, mode: ErrorMessageMode = 'modal') {
+  return basicHttp.put(
+    {
+      url: Api.UPDATE + `${id}/`,
+      params
     },
     {
       errorMessageMode: mode,

@@ -33,11 +33,11 @@
       };
       const tasks: Ref<any[]> = ref([]);
       const colors = ['#00d8ff', '#3fb27f', '#e18525', '#bf0c2c', ''];
-      const getTodoTasks = (page) => {
-        getTodoTaskListApi(page).then(
+      const getTodoTasks = () => {
+        getTodoTaskListApi().then(
           (res) => {
             if (res.results.length > 6) {
-              res.results.splice(6, res.results.length - 6);
+              res.results.splice(6, res.results.length - 6); //首页只显示前6条
             }
             res.results.forEach((item, index) => {
               let date = new Date(item.created_at);
@@ -51,7 +51,7 @@
           (_err) => {},
         );
       };
-      getTodoTasks(1);
+      getTodoTasks();
       const handleClick = (id) => {
         router.push(`/user/infomanage/task?id=${id}`);
       };
