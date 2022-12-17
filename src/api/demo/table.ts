@@ -177,6 +177,16 @@ export function commentTaskListApi(pageIndex: number, mode: ErrorMessageMode = '
 }
 
 export function userListApi(pageIndex: number, mode: ErrorMessageMode = 'modal') {
+  if (pageIndex == -1) {
+    return authHttp.get(
+      {
+        url: Api.USER_LIST,
+      },
+      {
+        errorMessageMode: mode,
+      },
+    );
+  }
   return authHttp.get(
     {
       url: Api.USER_LIST + `?page=${pageIndex}`,

@@ -18,7 +18,7 @@
   import { infoAdviceApi } from '/@/api/demo/table';
   const schemas: FormSchema[] = [
     {
-      field: 'field1',
+      field: 'advise',
       component: 'Input',
       label: '修改意见',
       colProps: {
@@ -39,12 +39,7 @@
     setup(props) {
       let id = 0;
       const modelRef = ref({});
-      const [
-        registerForm,
-        {
-          validate,
-        },
-      ] = useForm({
+      const [registerForm, { validate }] = useForm({
         labelWidth: 120,
         schemas,
         showActionButtonGroup: false,
@@ -58,9 +53,9 @@
       });
 
       function onDataReceive(data) {
-        console.log('Data Received', data);
+        // console.log('Data Received', data);
         id = data.data;
-        modelRef.value = { field2: data.data, field1: data.info };
+        modelRef.value = { field2: data.data, advise: data.info };
       }
 
       function handleVisibleChange(v) {
@@ -69,10 +64,10 @@
 
       async function handleSubmit() {
         const value = await validate();
-        console.log(id);
-        console.log(value.field1);
+        // console.log(id);
+        // console.log(value.advise);
         const param = {
-          advice: value.field1,
+          advice: value.advise,
         };
         await infoAdviceApi(id, param);
         props.update();

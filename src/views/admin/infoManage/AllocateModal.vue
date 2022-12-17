@@ -12,41 +12,41 @@
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, nextTick } from 'vue';
+  import { defineComponent, nextTick, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
-  import { infoAdviceApi } from '/@/api/demo/table';
+  import { userListApi } from '/@/api/demo/table';
+
+  const memberList: LabelValueOptions = [];
+
+  userListApi(-1).then((res) => {
+    res.results.forEach((item) => {
+      console.log(item);
+      if (item.role == 1) {
+        let tmp = { label: item.name, value: item.id };
+        memberList.push(tmp);
+      }
+    });
+  });
+
   const schemas: FormSchema[] = [
     {
-      field: 'field1',
+      field: 'advise',
       component: 'Input',
       label: '指导意见',
       colProps: {
         span: 24,
       },
-      defaultValue: '请输入指导意见',
+      // defaultValue: '请输入指导意见',
     },
     {
-      field: 'field2',
-      component: 'TreeSelect',
-      label: '成员分配',
-      defaultValue: '请选择成员',
-      required: true,
-    },
-    {
-      field: 'parentDept',
-      label: '上级部门',
-      component: 'TreeSelect',
-
+      field: 'member',
+      component: 'Select',
+      label: '选择成员',
       componentProps: {
-        fieldNames: {
-          label: 'deptName',
-          key: 'id',
-          value: 'id',
-        },
-        getPopupContainer: () => document.body,
+        options: memberList,
       },
-      required: true,
+      // required: true,
     },
   ];
   export default defineComponent({
@@ -87,12 +87,12 @@
       async function handleSubmit() {
         const value = await validate();
         console.log(id);
-        console.log(value.field1);
-        const param = {
-          advice: value.field1,
-        };
-        await infoAdviceApi(id, param);
-        props.update();
+        console.log(value.member);
+        // const param = {
+        //   advice: value.field1,
+        // };
+        // await infoAdviceApi(id, param);
+        // props.update();
         closeModal();
       }
 

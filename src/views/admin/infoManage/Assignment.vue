@@ -44,19 +44,14 @@
     },
     {
       title: '处理用户',
-      dataIndex: 'name1',
+      dataIndex: 'user',
       width: 150,
-    },
-    {
-      title: '涉及单位',
-      width: 150,
-      dataIndex: 'department',
     },
     {
       title: '当前状态',
       width: 150,
-      sorter: true,
-      dataIndex: 'status',
+      // sorter: true,
+      dataIndex: 'state',
     },
   ];
   export default defineComponent({
@@ -66,7 +61,19 @@
       const data = ref([]);
       const updateAssignmentList = (currentPage) => {
         commentTaskListApi(currentPage).then((res) => {
+          res.results.forEach((item) => {
+            let date = new Date(item.created_at);
+            item.created_at = `${date.getFullYear()}年${
+              date.getMonth() + 1
+            }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
+            let user = '';
+            item.users.forEach((item) => {
+              user += item + '.';
+            });
+            item.user = user;
+          });
           data.value = res.results;
+          console.log(data);
           setPagination({
             total: res.count,
             showSizeChanger: false,
