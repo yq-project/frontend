@@ -46,12 +46,7 @@
           </a-step>
           <a-step title="学生撤回信息" />
         </a-steps>
-        <a-steps
-          v-if="state !== 3 && state !== 4"
-          :current="state + processTaskState"
-          progress-dot
-          size="small"
-        >
+        <a-steps v-if="state !== 3 && state !== 4" :current="sumState" progress-dot size="small">
           <a-step v-if="state !== 0" title="上传信息">
             <template #description>
               <p>{{ data.created_at }}</p>
@@ -85,6 +80,8 @@
           <img :src="data.picture" style="width: 800px" />
         </a-descriptions-item>
       </a-card>
+
+      <BasicTable @register="registerTimeTable" />
     </div>
     <RefundedModal @register="registerRefundedModal" :update="update" />
     <AllocateModal @register="registerAllocateModal" :update="update" />
@@ -97,7 +94,6 @@
   import {
     infoApi,
     infoPassApi,
-    infoAdviceApi,
     processTaskApi,
     infoCloseApi,
     processTaskPassApi,
@@ -106,10 +102,13 @@
   import AllocateModal from './AllocateModal.vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useModal } from '/@/components/Modal';
+  import { BasicTable, useTable } from '/@/components/Table';
+  import { BasicColumn } from '/@/components/Table/src/types/table';
 
   export default defineComponent({
     components: {
       PageWrapper,
+      BasicTable,
       [Divider.name]: Divider,
       [Card.name]: Card,
       [Descriptions.name]: Descriptions,
@@ -161,29 +160,25 @@
             return 1;
         }
       });
+      const sumState = computed(() => {
+        if (state.value == 2) return 2 + processTaskState.value;
+        return state.value;
+      });
       function back() {
         router.push('/infoManage/infoList');
       }
-      const advice = async () => {
-        const id = route.query.infoId;
-        const params = {
-          advice: 'lalalsdfkljsldfjskldfjsl',
-        };
-        await infoAdviceApi(id, params);
-        data.value = await infoApi(param);
-      };
       const close = async () => {
-        const param = route.query.infoId;
+        // const param = route.query.infoId;
         await infoCloseApi(param);
         data.value = await infoApi(param);
       };
       const pass = async () => {
-        const param = route.query.infoId;
+        // const param = route.query.infoId;
         await infoPassApi(param);
         data.value = await infoApi(param);
       };
       const passProcessTask = async () => {
-        const param = route.query.infoId;
+        // const param = route.query.infoId;
         await processTaskPassApi(param);
         infoApi(param).then(callback);
       };
@@ -201,20 +196,91 @@
       }
 
       function handleAllocate() {
+        console.log(data);
         openAllocateModal(true, {
           data: param,
-          info: data.value.advice,
         });
       }
+
+      const refundTimeTableData: any[] = [
+        // {
+        //   t1: '2017-10-01 14:10',
+        //   t2: '联系客户',
+        //   t3: '进行中',
+        //   t4: '取货员 ID1234',
+        //   t5: '5mins',
+        // },
+        // {
+        //   t1: '2017-10-01 14:10',
+        //   t2: '取货员出发',
+        //   t3: '成功',
+        //   t4: '取货员 ID1234',
+        //   t5: '5mins',
+        // },
+        // {
+        //   t1: '2017-10-01 14:10',
+        //   t2: '取货员接单',
+        //   t3: '成功',
+        //   t4: '系统',
+        //   t5: '5mins',
+        // },
+        // {
+        //   t1: '2017-10-01 14:10',
+        //   t2: '申请审批通过',
+        //   t3: '成功',
+        //   t4: '用户',
+        //   t5: '1h',
+        // },
+      ];
+
+      const refundTimeTableSchema: BasicColumn[] = [
+        {
+          title: '时间',
+          width: 150,
+          dataIndex: 't1',
+        },
+        {
+          title: '当前进度',
+          width: 150,
+          dataIndex: 't2',
+        },
+        {
+          title: '状态',
+          width: 150,
+          dataIndex: 't3',
+        },
+        {
+          title: '操作员ID	',
+          width: 150,
+          dataIndex: 't4',
+        },
+        {
+          title: '耗时',
+          width: 150,
+          dataIndex: 't5',
+        },
+      ];
+
+      const [registerTimeTable] = useTable({
+        title: '退货进度',
+        columns: refundTimeTableSchema,
+        pagination: false,
+        dataSource: refundTimeTableData,
+        showIndexColumn: false,
+        scroll: { y: 300 },
+      });
+
       return {
         update,
         linkDownload,
+        registerTimeTable,
         title,
         processTaskData,
         processTaskState,
         data,
         state,
-        advice,
+        sumState,
+        // advice,
         pass,
         passProcessTask,
         close,
