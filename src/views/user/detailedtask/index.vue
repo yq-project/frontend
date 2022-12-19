@@ -124,7 +124,7 @@
         let params={
           feedback:feedback.value
         }
-        feedbackTaskApi(info.value.id,params).then((_res)=>{
+        feedbackTaskApi(parseInt(route.query.id as string),params).then((_res)=>{
           createMessage.success("反馈成功")
           router.push("/user/infomanage/todos")
         })

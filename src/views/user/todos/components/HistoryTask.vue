@@ -12,8 +12,14 @@
             },
           ]"
         />
-      </template> </template
-  ></BasicTable>
+      </template>
+      <template v-else-if="column.key === 'state'">
+          <Tag :color="record.stateColor">
+            {{ record.state }}
+          </Tag>
+      </template>
+    </template>
+  </BasicTable>
 </template>
 <script lang="ts" setup>
 import {ref} from 'vue';
@@ -21,6 +27,7 @@ import {BasicColumn, BasicTable, TableAction, useTable} from '/@/components/Tabl
 import {getTaskListApi} from '/@/api/sys/commentTask';
 import {commentTaskStateMap} from '/@/enums/infoStateEnum';
 import { useRouter } from 'vue-router';
+import { Tag } from 'ant-design-vue'
 
 const data = ref([]);
   const actionColumn = {
@@ -32,7 +39,12 @@ const data = ref([]);
   const columns = [
     {
       title: '舆情名称',
-      dataIndex: 'subject',
+      dataIndex: 'info_subject',
+    },
+    {
+      title: '发布人',
+      width: 100,
+      dataIndex: 'creator',
     },
     {
       title: '发布时间',
@@ -51,13 +63,16 @@ const data = ref([]);
   const getTaskList = (pageIndex) => {
     getTaskListApi(pageIndex).then((res) => {
       res.results.forEach((item) => {
-        // item.creator = '管理员';
-        item.subject = '舆情标题';
         let date = new Date(item.created_at);
         item.created_at = `${date.getFullYear()}年${
           date.getMonth() + 1
         }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
+        item.stateColor="green"
+        if(item.state==0){
+          item.stateColor="red"
+        }
         item.state = commentTaskStateMap.get(item.state);
+        
       });
       count.value = res.count;
       data.value = res.results;
