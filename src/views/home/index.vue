@@ -24,16 +24,45 @@
   // import DealSituation from './components/DealSituation.vue';
 
   import RankList from './components/RankList.vue';
+  import { infoStatisticApi } from '/@/api/demo/table';
+  import moment from 'moment';
 
   const loading = ref(true);
 
-  const rankList = [];
-  for (let i = 0; i < 7; i++) {
-    rankList.push({
-      name: '白鹭岛 ' + (i + 1) + ' 号店',
-      total: 1234.56 - i * 100,
-    });
+  const rankList = [
+    { name: '暂无', total: 0 },
+    { name: '暂无', total: 0 },
+    { name: '暂无', total: 0 },
+    { name: '暂无', total: 0 },
+    { name: '暂无', total: 0 },
+    { name: '暂无', total: 0 },
+    { name: '暂无', total: 0 },
+    { name: '暂无', total: 0 },
+    { name: '暂无', total: 0 },
+    { name: '暂无', total: 0 },
+  ];
+  function getLastTime(N) {
+    return moment(new Date().getTime() - N * 1000 * 24 * 60 * 60).format('YYYY-MM-DD');
   }
+  let start = getLastTime(30);
+  infoStatisticApi('creator', '', start + 'T00:00:00', '').then((res) => {
+    let data = [];
+    res.result.forEach((item) => {
+      data.push({
+        name: item.creator,
+        total: item.count,
+      });
+    });
+    data.sort((n1, n2) => {
+      return n2.total - n1.total;
+    });
+    let max = data.length;
+    if (max > 10) max = 10;
+    for (let i = 0; i < max; ++i) {
+      rankList[i] = data[i];
+    }
+    // console.log(data);
+  });
 
   setTimeout(() => {
     loading.value = false;

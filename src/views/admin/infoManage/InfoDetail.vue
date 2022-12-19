@@ -80,7 +80,6 @@
           <img :src="data.picture" style="width: 800px" />
         </a-descriptions-item>
       </a-card>
-
       <BasicTable @register="registerTimeTable" />
     </div>
     <RefundedModal @register="registerRefundedModal" :update="update" />
@@ -97,6 +96,8 @@
     processTaskApi,
     infoCloseApi,
     processTaskPassApi,
+    userListApi,
+    commentTaskApi,
   } from '/@/api/demo/table';
   import RefundedModal from './RefundedModal.vue';
   import AllocateModal from './AllocateModal.vue';
@@ -123,22 +124,76 @@
     setup() {
       const data = ref([]);
       const processTaskData = ref([]);
+      const commentTaskData = ref([]);
+      const commentTaskUser = ref([]);
       const route = useRoute();
       const router = useRouter();
       const param = route.query.infoId;
       const title = computed(() => {
         return '舆情主题：' + data.value.subject;
       });
+      const memberListAll: LabelValueOptions = [];
+      const memberList: LabelValueOptions = [];
+      const _memberList: LabelValueOptions = [];
+
       const [registerRefundedModal, { openModal: openRefundedModal }] = useModal();
       const [registerAllocateModal, { openModal: openAllocateModal }] = useModal();
       const callback = (res) => {
         data.value = res;
+        let date = new Date(data.value.created_at);
+        data.value.created_at = `${date.getFullYear()}年${
+          date.getMonth() + 1
+        }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
         // console.log(data.value);
         if (data.value.state == 2) {
           processTaskApi(data.value.process_id).then((res) => {
             processTaskData.value = res;
           });
         }
+        userListApi(-1).then((res) => {
+          res.forEach((item) => {
+            // console.log(item);
+            if (item.role == 1) {
+              let tmp = { label: item.name, value: item.id };
+              memberListAll.push(tmp);
+            }
+          });
+          if (data.value.comment_id != null) {
+            commentTaskApi(data.value.comment_id).then((res) => {
+              commentTaskData.value = res;
+              // console.log(commentTaskData.value.user);
+              // console.log(memberListAll);
+              memberListAll.forEach((member) => {
+                let flag = false;
+                commentTaskData.value.user.forEach((item) => {
+                  if (member.value == item.user) {
+                    _memberList.push(member.value);
+                    item.user = member.label;
+                    flag = true;
+                  }
+                });
+                if (!flag) {
+                  let _tmp = { label: member.label, value: member.value };
+                  memberList.push(_tmp);
+                }
+              });
+              // console.log(_memberList);
+              commentTaskData.value.user.forEach((item) => {
+                commentTaskUser.value.push({
+                  user: item.user,
+                  created_at: item.created_at,
+                  feedback: item.feedback,
+                  feedback_at: item.feedback_at,
+                });
+              });
+            });
+          } else {
+            memberListAll.forEach((member) => {
+              let _tmp = { label: member.label, value: member.value };
+              memberList.push(_tmp);
+            });
+          }
+        });
       };
       infoApi(param).then(callback);
       const processTaskState = computed(() => {
@@ -196,73 +251,71 @@
       }
 
       function handleAllocate() {
-        console.log(data);
+        // console.log(data.value);
+        // console.log(_memberList);
         openAllocateModal(true, {
           data: param,
+          commentTaskId:data.value.comment_id,
+          memberList: memberList,
+          _memberList: _memberList,
         });
       }
 
-      const refundTimeTableData: any[] = [
-        // {
-        //   t1: '2017-10-01 14:10',
-        //   t2: '联系客户',
-        //   t3: '进行中',
-        //   t4: '取货员 ID1234',
-        //   t5: '5mins',
-        // },
-        // {
-        //   t1: '2017-10-01 14:10',
-        //   t2: '取货员出发',
-        //   t3: '成功',
-        //   t4: '取货员 ID1234',
-        //   t5: '5mins',
-        // },
-        // {
-        //   t1: '2017-10-01 14:10',
-        //   t2: '取货员接单',
-        //   t3: '成功',
-        //   t4: '系统',
-        //   t5: '5mins',
-        // },
-        // {
-        //   t1: '2017-10-01 14:10',
-        //   t2: '申请审批通过',
-        //   t3: '成功',
-        //   t4: '用户',
-        //   t5: '1h',
-        // },
-      ];
+      // const refundTimeTableData: any[] = [];
+      // const refundTimeTableData = ref([
+      //   {
+      //     user: 'a',
+      //     created_at: 'b',
+      //     feedback: 'c',
+      //     feedback_at: 'd',
+      //   },
+      // ]);
+      // console.log(refundTimeTableData);
+      // console.log(commentTaskUser);
+      const refundTimeTableData = computed(() => {
+        commentTaskUser.value.forEach((item) => {
+          let date = new Date(item.created_at);
+          item.created_at = `${date.getFullYear()}年${
+            date.getMonth() + 1
+          }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
+          if (item.feedback_at == null) {
+            item.feedback = '待反馈';
+            item.feedback_at = '暂无';
+          } else {
+            let _date = new Date(item.feedback_at);
+            item.feedback_at = `${_date.getFullYear()}年${
+              _date.getMonth() + 1
+            }月${_date.getDate()}日 ${_date.getHours()}:${_date.getMinutes()}`;
+          }
+        });
+        return commentTaskUser;
+      });
 
       const refundTimeTableSchema: BasicColumn[] = [
         {
-          title: '时间',
+          title: '分配成员',
           width: 150,
-          dataIndex: 't1',
+          dataIndex: 'user',
         },
         {
-          title: '当前进度',
+          title: '发布时间',
           width: 150,
-          dataIndex: 't2',
+          dataIndex: 'created_at',
         },
         {
-          title: '状态',
+          title: '内容反馈',
           width: 150,
-          dataIndex: 't3',
+          dataIndex: 'feedback',
         },
         {
-          title: '操作员ID	',
+          title: '反馈时间',
           width: 150,
-          dataIndex: 't4',
-        },
-        {
-          title: '耗时',
-          width: 150,
-          dataIndex: 't5',
+          dataIndex: 'feedback_at',
         },
       ];
 
       const [registerTimeTable] = useTable({
-        title: '退货进度',
+        title: '网评任务成员',
         columns: refundTimeTableSchema,
         pagination: false,
         dataSource: refundTimeTableData,
@@ -277,6 +330,8 @@
         title,
         processTaskData,
         processTaskState,
+        commentTaskData,
+        commentTaskUser,
         data,
         state,
         sumState,
