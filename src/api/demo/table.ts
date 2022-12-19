@@ -7,7 +7,7 @@ enum Api {
   DEMO_LIST2 = '/table/getDemoList2',
   INFO_LIST = '/info',
   INFO_STATISTIC = '/statistic/info',
-  COMMENT_TASK_LIST = '/comment_task/',
+  COMMENT_TASK_LIST = '/comment_task',
   PROCESS_TASK_LIST = '/process_task',
   USER_LIST = '/user/',
 }
@@ -169,6 +169,41 @@ export function commentTaskListApi(pageIndex: number, mode: ErrorMessageMode = '
   return basicHttp.get(
     {
       url: Api.COMMENT_TASK_LIST + `?page=${pageIndex}`,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+export function commentTaskApi(param, mode: ErrorMessageMode = 'modal') {
+  return basicHttp.get(
+    {
+      url: Api.COMMENT_TASK_LIST + `/` + param + '/',
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+export function commentTaskCreateApi(param, mode: ErrorMessageMode = 'modal') {
+  return basicHttp.post(
+    {
+      url: Api.COMMENT_TASK_LIST + `/`,
+      params: param,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+export function commentTaskUpdateApi(param, userList, mode: ErrorMessageMode = 'modal') {
+  return basicHttp.put(
+    {
+      url: Api.COMMENT_TASK_LIST + `/` + param + '/',
+      params: userList,
     },
     {
       errorMessageMode: mode,

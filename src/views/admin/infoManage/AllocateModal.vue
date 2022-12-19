@@ -12,43 +12,21 @@
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, nextTick, ref } from 'vue';
+  import { computed, defineComponent, nextTick, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
-  import { userListApi } from '/@/api/demo/table';
+  import { commentTaskCreateApi, commentTaskUpdateApi } from '/@/api/demo/table';
 
-  const memberList: LabelValueOptions = [];
+  // userListApi(-1).then((res) => {
+  //   res.forEach((item) => {
+  //     // console.log(item);
+  //     if (item.role == 1) {
+  //       let tmp = { label: item.name, value: item.id };
+  //       memberList.push(tmp);
+  //     }
+  //   });
+  // });
 
-  userListApi(-1).then((res) => {
-    res.results.forEach((item) => {
-      console.log(item);
-      if (item.role == 1) {
-        let tmp = { label: item.name, value: item.id };
-        memberList.push(tmp);
-      }
-    });
-  });
-
-  const schemas: FormSchema[] = [
-    {
-      field: 'advise',
-      component: 'Input',
-      label: '指导意见',
-      colProps: {
-        span: 24,
-      },
-      // defaultValue: '请输入指导意见',
-    },
-    {
-      field: 'member',
-      component: 'Select',
-      label: '选择成员',
-      componentProps: {
-        options: memberList,
-      },
-      // required: true,
-    },
-  ];
   export default defineComponent({
     name: 'AllocateModal',
     components: { BasicModal, BasicForm },
@@ -60,7 +38,45 @@
     },
     setup(props) {
       let id = 0;
+      let commentTaskId;
       const modelRef = ref({});
+
+      const memberList = ref([]);
+      const _memberList = ref([]);
+
+      function onDataReceive(data) {
+        console.log('Data Received', data);
+        id = data.data;
+        commentTaskId = data.commentTaskId;
+        memberList.value = data.memberList;
+        _memberList.value = data._memberList;
+        modelRef.value = { field2: data.data, field1: data.info };
+        // console.log(_memberList);
+        // console.log(memberList);
+      }
+
+      const schemas: FormSchema[] = [
+        {
+          field: 'advise',
+          component: 'Input',
+          label: '指导意见',
+          colProps: {
+            span: 24,
+          },
+          // required: true,
+          // defaultValue: '请输入指导意见',
+        },
+        {
+          field: 'member',
+          component: 'Select',
+          label: '选择成员',
+          componentProps: {
+            options: memberList,
+          },
+          required: true,
+        },
+      ];
+
       const [registerForm, { validate }] = useForm({
         labelWidth: 120,
         schemas,
@@ -74,25 +90,37 @@
         data && onDataReceive(data);
       });
 
-      function onDataReceive(data) {
-        console.log('Data Received', data);
-        id = data.data;
-        modelRef.value = { field2: data.data, field1: data.info };
-      }
-
       function handleVisibleChange(v) {
         v && props.userData && nextTick(() => onDataReceive(props.userData));
       }
 
+      function unique(arr) {
+        return Array.from(new Set(arr));
+      }
+
       async function handleSubmit() {
+        // console.log(_memberList);
         const value = await validate();
-        console.log(id);
-        console.log(value.member);
-        // const param = {
-        //   advice: value.field1,
-        // };
-        // await infoAdviceApi(id, param);
-        // props.update();
+        // console.log(id);
+        // console.log(value.member);
+        let _commentTaskId = -1;
+        // console.log(value.advise);
+        console.log(commentTaskId);
+        if (commentTaskId == null) {
+          const param = { info: id };
+          await commentTaskCreateApi(param).then((res) => {
+            // console.log(res.id);
+            _commentTaskId = res.id;
+          });
+        } else {
+          _commentTaskId = commentTaskId;
+        }
+        const userList = unique(_memberList.value);
+        // console.log(userList);
+        userList.push(value.member);
+        const userListParam = { userList: userList };
+        await commentTaskUpdateApi(_commentTaskId, userListParam);
+        props.update();
         closeModal();
       }
 

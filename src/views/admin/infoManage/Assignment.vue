@@ -3,12 +3,7 @@
     <BasicTable @register="registerTable">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === '操作'">
-          <template v-if="record.status === '未审核'">
-            <a-button class="mr-2" @click="goToDetail(record.info)"> 前往审核 </a-button>
-          </template>
-          <template v-else>
-            <a-button class="mr-2" @click="goToDetail(record.info)"> 前往分配 </a-button>
-          </template>
+          <a-button class="mr-2" @click="goToDetail(record.info)"> 查看详情 </a-button>
         </template>
       </template>
     </BasicTable>
@@ -24,7 +19,7 @@
   const columns: BasicColumn[] = [
     {
       title: '舆情主题',
-      dataIndex: 'subject',
+      dataIndex: 'info_subject',
       editRow: true,
       editComponentProps: {
         prefix: '$',
@@ -62,6 +57,7 @@
       const updateAssignmentList = (currentPage) => {
         commentTaskListApi(currentPage).then((res) => {
           res.results.forEach((item) => {
+            // console.log(item);
             let date = new Date(item.created_at);
             item.created_at = `${date.getFullYear()}年${
               date.getMonth() + 1
@@ -71,6 +67,14 @@
               user += item + '.';
             });
             item.user = user;
+            switch (item.state) {
+              case 1:
+                item.state = '已完成';
+                break;
+              default:
+                item.state = '未完成';
+                break;
+            }
           });
           data.value = res.results;
           console.log(data);

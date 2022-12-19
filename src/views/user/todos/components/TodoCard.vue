@@ -4,9 +4,9 @@
       <CardGrid class="!md:w-1/3 !w-full" @click="handleClick(item.id)">
         <span class="flex">
           <Icon icon="carbon:task-add" :color="item.color" size="30" />
-          <span class="text-lg ml-4">舆情名称</span>
+          <span class="text-lg ml-4">{{item.info_subject}}</span>
         </span>
-        <div class="flex mt-2 h-10 text-secondary">参考口径</div>
+        <!-- <div class="flex mt-2 h-10 text-secondary">参考口径</div> -->
         <div class="flex justify-between text-secondary">
           <span>{{ item.created_at }}</span>
         </div>
