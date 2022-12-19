@@ -1,5 +1,8 @@
 <template>
-  <PageWrapper  title="发布公告">
+  <PageWrapper title="发布公告">
+    <template v-if="route.query.id != null" #extra>
+      <a-button @click="back"> 返回 </a-button>
+    </template>
     <Card title="公告内容">
       <BasicForm
         :labelWidth="100"
@@ -73,7 +76,10 @@
         });
       }
 
-      return { schemas, tableRef, handleSubmit };
+      function back() {
+        router.push('/announcement/updateAnnouncement');
+      }
+      return { schemas, tableRef, handleSubmit, back, route };
     },
   });
 </script>
