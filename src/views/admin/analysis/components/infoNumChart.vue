@@ -1,6 +1,6 @@
 <template>
   <Card title="选择时间">
-    <UseForm :updateCategory="updateCategory" />
+    <Filter :updateCategory="updateCategory" />
   </Card>
   <Card title="信息数量">
     <div ref="chartRef" :style="{ height, width }"></div>
@@ -9,13 +9,13 @@
 <script lang="ts">
   import { defineComponent, Ref, ref } from 'vue';
   import { Card } from 'ant-design-vue';
-  import UseForm from './UseForm.vue';
+  import Filter from './infoNumFilter.vue';
   import { useECharts } from '/@/hooks/web/useECharts';
   import { infoStatisticApi } from '/@/api/demo/table';
-import { differenceInMonths } from 'date-fns';
+  import { differenceInMonths } from 'date-fns';
 
   export default defineComponent({
-    components: { Card, UseForm },
+    components: { Card, Filter },
     props: {
       width: {
         type: String as PropType<string>,
