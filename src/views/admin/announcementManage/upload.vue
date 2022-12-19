@@ -49,9 +49,9 @@
           render: ({ model, field }) => {
             return h(Tinymce, {
               value: model[field],
-              plugins: [],
+              plugins: ['lists autolink wordcount'],
               toolbar: [
-                'fontsizeselect lineheight searchreplace bold italic underline strikethrough alignleft aligncenter alignright outdent indent  blockquote undo redo removeformat',
+                'fontsizeselect bold italic underline strikethrough alignleft aligncenter alignright outdent indent undo redo removeformat',
                 'hr bullist numlist link',
               ],
               showImageUpload: false,
