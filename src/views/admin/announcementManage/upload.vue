@@ -1,6 +1,6 @@
 <template>
-  <PageWrapper class="high-form" title="发布公告">
-    <CollapseContainer title="公告内容">
+  <PageWrapper  title="发布公告">
+    <Card title="公告内容">
       <BasicForm
         :labelWidth="100"
         :schemas="schemas"
@@ -8,7 +8,7 @@
         :baseColProps="{ span: 24 }"
         @submit="handleSubmit"
       />
-    </CollapseContainer>
+    </Card>
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -24,7 +24,7 @@
 
   export default defineComponent({
     name: 'FormHightPage',
-    components: { BasicForm, PageWrapper, [Card.name]: Card, CollapseContainer },
+    components: { BasicForm, PageWrapper, Card, CollapseContainer },
     setup() {
       const route = useRoute();
       const router = useRouter();
