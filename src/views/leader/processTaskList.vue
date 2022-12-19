@@ -13,10 +13,11 @@
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, ref } from 'vue';
+
+  import { defineComponent, ref } from 'vue';
   import { BasicTable, useTable, BasicColumn } from '/@/components/Table';
 
-  import { infoApi, processTaskReadApi, processTaskListApi } from '/@/api/demo/table';
+  import { processTaskReadApi, processTaskListApi } from '/@/api/demo/table';
   import { useRouter } from 'vue-router';
   import { useUserStore } from '/@/store/modules/user';
 
@@ -83,6 +84,10 @@
                     break;
                 }
               }
+              let date = new Date(item.created_at);
+              item.created_at = `${date.getFullYear()}年${
+                date.getMonth() + 1
+              }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
               tmp.push(item);
             }
           });

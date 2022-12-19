@@ -46,7 +46,7 @@
   const data = ref([]);
   const growCardList: GrowCardItem[] = reactive([
     {
-      title: '舆情数（昨日上传）',
+      title: '舆情数（最近一日）',
       icon: 'visit-count|svg',
       value: 5,
       total: 1000,

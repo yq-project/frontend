@@ -45,7 +45,7 @@
         </a-descriptions-item>
       </a-card>
     </div>
-    <FeedbackModal @register="register4" :update="update" />
+    <FeedbackModal @register="register4" :update="back" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -87,7 +87,11 @@
       const callback = (res) => {
         data.value = res;
         infoData.value = data.value.info;
-        console.log(data.value.state);
+        let date = new Date(infoData.value.created_at);
+        infoData.value.created_at = `${date.getFullYear()}年${
+          date.getMonth() + 1
+        }月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
+        // console.log(data.value.state);
       };
       processTaskApi(param).then(callback);
       function back() {
