@@ -13,6 +13,27 @@
   import { useECharts } from '/@/hooks/web/useECharts';
   import { infoStatisticApi } from '/@/api/demo/table';
   import { differenceInMonths } from 'date-fns';
+  import moment from 'moment';
+
+  function getStartOfWeek(index) {
+    return moment(
+      moment()
+        .week(moment().week() - index)
+        .startOf('week')
+        .valueOf(),
+    ).format('YYYY-MM-DD');
+  }
+
+  const lastWeek = getStartOfWeek(1);
+  const thisWeek = getStartOfWeek(0);
+  const cg: any[] = [];
+  let date1 = new Date(lastWeek);
+  let date2 = new Date(thisWeek);
+  for (let i = date1.getTime(); i <= date2.getTime(); i = i + 86400000) {
+    let t = new Date(i);
+    var format = `${t.getFullYear()}.${t.getMonth() + 1}.${t.getDate()}`;
+    cg.push(format);
+  }
 
   export default defineComponent({
     components: { Card, Filter },
@@ -114,34 +135,7 @@
       function onTabChange(key) {
         activeKey.value = key;
       }
-      setOptions({
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            lineStyle: {
-              width: 1,
-              color: '#019680',
-            },
-          },
-        },
-        grid: { left: '1%', right: '1%', top: '2  %', bottom: 0, containLabel: true },
-        xAxis: {
-          type: 'category',
-          data: category,
-        },
-        yAxis: {
-          type: 'value',
-          max: 100,
-          splitNumber: 5,
-        },
-        series: [
-          {
-            data: [],
-            type: 'bar',
-            barMaxWidth: 50,
-          },
-        ],
-      });
+      updateCategory(lastWeek, thisWeek, 'day', cg);
       return { activeKey, tabListTitle, onTabChange, chartRef, updateCategory };
     },
   });

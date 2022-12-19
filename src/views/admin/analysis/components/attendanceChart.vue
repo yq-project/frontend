@@ -12,6 +12,19 @@
   import Filter from './infoKindFilter.vue';
   import { useECharts } from '/@/hooks/web/useECharts';
   import { infoStatisticApi } from '/@/api/demo/table';
+  import moment from 'moment';
+
+  function getStartOfWeek(index) {
+    return moment(
+      moment()
+        .week(moment().week() - index)
+        .startOf('week')
+        .valueOf(),
+    ).format('YYYY-MM-DD');
+  }
+
+  const lastWeek = getStartOfWeek(1);
+  const thisWeek = getStartOfWeek(0);
 
   export default defineComponent({
     components: { Card, Filter },
@@ -97,49 +110,7 @@
       function onTabChange(key) {
         activeKey.value = key;
       }
-      setOptions({
-        tooltip: {
-          trigger: 'item',
-        },
-        legend: {
-          bottom: '1%',
-          left: 'center',
-        },
-        series: [
-          {
-            color: ['#5ab1ef', '#b6a2de', '#67e0e3', '#2ec7c9'],
-            name: '成员',
-            type: 'pie',
-            radius: ['40%', '70%'],
-            avoidLabelOverlap: false,
-            itemStyle: {
-              borderRadius: 10,
-              borderColor: '#fff',
-              borderWidth: 2,
-            },
-            label: {
-              show: false,
-              position: 'center',
-            },
-            emphasis: {
-              label: {
-                show: true,
-                fontSize: '12',
-                fontWeight: 'bold',
-              },
-            },
-            labelLine: {
-              show: false,
-            },
-            data: data,
-            animationType: 'scale',
-            animationEasing: 'exponentialInOut',
-            animationDelay: function () {
-              return Math.random() * 100;
-            },
-          },
-        ],
-      });
+      updateCategory(lastWeek, thisWeek, 'day');
       return { activeKey, tabListTitle, onTabChange, chartRef, updateCategory };
     },
   });

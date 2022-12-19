@@ -5,6 +5,7 @@
   import { defineComponent } from 'vue';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
   import { startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns';
+  //import moment from 'moment';
 
   const schemas: FormSchema[] = [
     {
@@ -14,6 +15,9 @@
       colProps: {
         span: 8,
       },
+      // componentProps: {
+      //   defaultValue: [moment(new Date()), moment(new Date())],
+      // },
     },
     {
       field: 'span',
@@ -38,6 +42,10 @@
           },
         ],
       },
+      // defaultValue: {
+      //   label: '日',
+      //   value: 'day',
+      // },
     },
   ];
 

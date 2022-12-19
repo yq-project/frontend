@@ -7,7 +7,7 @@
   import { basicProps } from './props';
   import moment from 'moment';
   import { infoStatisticApi } from '/@/api/demo/table';
-  import {last} from "lodash-es";
+  import { last } from 'lodash-es';
 
   defineProps({
     ...basicProps,
