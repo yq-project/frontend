@@ -13,7 +13,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, onBeforeMount, ref } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { BasicColumn } from '/@/components/Table/src/types/table';
   import { userListApi } from '/@/api/demo/table';
@@ -48,7 +48,7 @@
           order: 'ascend',
         },
         rowKey: 'id',
-        showTableSetting: true,
+        //showTableSetting: true,
         showIndexColumn: false,
         pagination: {
           //@ts-ignore
@@ -62,8 +62,8 @@
       function getBasicColumns(): BasicColumn[] {
         return [
           {
-            title: 'ID',
-            dataIndex: 'id',
+            title: '学号',
+            dataIndex: 'number',
             fixed: 'left',
             width: 200,
           },

@@ -61,7 +61,7 @@
         columns: getBasicColumns(),
         rowKey: 'id',
         showIndexColumn: false,
-        showTableSetting: true,
+        //showTableSetting: true,
         actionColumn: {
           width: 200,
           title: 'Action',

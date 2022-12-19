@@ -49,12 +49,6 @@
   import { DeleteUserApi } from '/@/api/demo/admin';
   const columns: BasicColumn[] = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      fixed: 'left',
-      width: 150,
-    },
-    {
       title: '用户名',
       dataIndex: 'name',
       width: 150,
@@ -127,7 +121,7 @@
           dataSource: data,
           columns: columns,
           showIndexColumn: false,
-          showTableSetting: true,
+          //showTableSetting: true,
           bordered: true,
           actionColumn: {
             width: 200,
