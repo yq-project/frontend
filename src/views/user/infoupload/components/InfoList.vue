@@ -13,6 +13,11 @@
           ]"
         />
       </template>
+      <template v-else-if="column.key === 'state'">
+          <Tag :color="record.stateColor">
+            {{ record.state }}
+          </Tag>
+        </template>
     </template>
   </BasicTable>
 </template>
@@ -22,6 +27,7 @@
   import { BasicColumn, BasicTable, TableAction, useTable } from '/@/components/Table';
   import { getInfoListApi } from '/@/api/sys/info';
   import { stateMap } from '/@/enums/infoStateEnum';
+  import { Tag } from 'ant-design-vue'
 
   const actionColumn = {
     width: 120,
@@ -65,6 +71,10 @@
   const getInfoList = (page) => {
     getInfoListApi(page).then((res) => {
       res.results.forEach((item) => {
+        item.stateColor="green"
+        if(item.state==1){
+          item.stateColor="red"
+        }
         item.state = stateMap.get(item.state);
         let date = new Date(item.created_at);
         item.created_at = `${date.getFullYear()}年${

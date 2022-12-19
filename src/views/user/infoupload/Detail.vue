@@ -2,7 +2,7 @@
   <PageWrapper title="舆情信息详情">
     <template #extra>
       <a-button @click="cancel"> 返回 </a-button>
-      <a-button @click="handleSubmit"> 修改 </a-button>
+      <a-button v-if="canUpdate" type="primary" @click="handleSubmit"> 修改 </a-button>
     </template>
     <a-card :bordered="false">
       <BasicForm @register="register" />
@@ -68,6 +68,7 @@
         time2:"",
         currentStep:1
       })
+      const canUpdate=ref(true);
       const calTime=(time)=>{
         let date = new Date(time);
         return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`
@@ -108,21 +109,19 @@
       if (route.query.id) {
         getInfoApi(parseInt(route.query.id as string)).then((res) => {
           step.value.time1=calTime(res.created_at)
-          if(res.state==0){
-            step.value.currentStep=1
-            step.value.step1Name="请修改后重新上传"
-          }
           if(res.state==1){
             step.value.currentStep=0
+            step.value.step1Name="请修改后重新上传"
           }
           if(res.state==2){
             step.value.currentStep=2
+            canUpdate.value=false
           }
           if(res.state==3){
             step.value.step2Name="管理员终止流程"
             step.value.currentStep=1
+            canUpdate.value=false
           }
-          step.value.currentStep=res.state+1
           setFieldsValue(res);
           showImg.value = true;
           imageUrl.value = res.picture;
@@ -130,7 +129,7 @@
       } else {
         router.push('/user/infomanage/upload');
       }
-      return { step, showImg, imageUrl, handleSubmit, register, uploadApi, handleChange, cancel, imageList };
+      return { step, showImg, imageUrl, canUpdate, handleSubmit, register, uploadApi, handleChange, cancel, imageList };
     },
   });
 </script>

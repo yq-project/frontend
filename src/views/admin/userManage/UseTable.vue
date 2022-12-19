@@ -66,34 +66,30 @@
             dataIndex: 'id',
             fixed: 'left',
             width: 200,
-            sorter: true,
           },
           {
             title: '用户名',
             dataIndex: 'name',
             width: 150,
-            sorter: true,
           },
           {
             title: '上传信息数量',
             dataIndex: 'info_count',
             width: 150,
-            sorter: true,
           },
           {
             title: '上传信息平均得分',
             dataIndex: 'info_avg',
             width: 150,
-            sorter: true,
           },
           {
             title: '当前状态',
             width: 150,
             dataIndex: 'online',
-            filters: [
-              { text: '在线', value: 'true' },
-              { text: '离线', value: 'false' },
-            ],
+            // filters: [
+            //   { text: '在线', value: 'true' },
+            //   { text: '离线', value: 'false' },
+            // ],
           },
         ];
       }

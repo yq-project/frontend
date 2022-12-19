@@ -22,7 +22,6 @@ export function getBasicColumns(): BasicColumn[] {
     {
       title: '发布时间',
       width: 150,
-      sorter: true,
       dataIndex: 'created_at',
     },
     // {

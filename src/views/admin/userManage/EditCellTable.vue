@@ -53,48 +53,44 @@
       dataIndex: 'id',
       fixed: 'left',
       width: 150,
-      sorter: true,
     },
     {
       title: '用户名',
       dataIndex: 'name',
       width: 150,
-      sorter: true,
     },
     {
       title: '用户权限',
       dataIndex: 'role',
-      edit: true,
-      editComponent: 'Select',
-      editComponentProps: {
-        options: [
-          {
-            label: '管理员',
-            value: 'admin',
-          },
-          {
-            label: '学生助管',
-            value: 'user',
-          },
-          {
-            label: '学院领导',
-            value: 'leader',
-          },
-        ],
-      },
+      // edit: true,
+      // editComponent: 'Select',
+      // editComponentProps: {
+      //   options: [
+      //     {
+      //       label: '管理员',
+      //       value: 'admin',
+      //     },
+      //     {
+      //       label: '学生助管',
+      //       value: 'user',
+      //     },
+      //     {
+      //       label: '学院领导',
+      //       value: 'leader',
+      //     },
+      //   ],
+      // },
       width: 150,
     },
     {
       title: '学/工号',
       dataIndex: 'number',
       width: 150,
-      sorter: true,
     },
     {
       title: '部门',
       dataIndex: 'department',
       width: 150,
-      sorter: true,
     },
   ];
   export default defineComponent({
