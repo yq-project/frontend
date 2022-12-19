@@ -13,7 +13,7 @@ export default {
   infoNum: '信息数量',
   infoKind: '信息种类',
   department: '信息涉及单位',
-  attendance: '成员考勤',
+  attendance: '成员上传信息',
   home: '首页',
   infoManage: {
     infoManage: '舆情管理',

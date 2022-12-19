@@ -1,11 +1,11 @@
 <template>
   <div class="p-4">
-    <SiteAnalysis class="!my-4 enter-y" :loading="loading" />
+    <AttendanceChart class="!my-4 enter-y" :loading="loading" />
   </div>
 </template>
 <script lang="ts" setup>
   import { ref } from 'vue';
-  import SiteAnalysis from './components/SiteAnalysis.vue';
+  import AttendanceChart from './components/attendanceChart.vue';
 
   const loading = ref(true);
 
