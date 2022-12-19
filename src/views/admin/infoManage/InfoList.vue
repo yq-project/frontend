@@ -29,17 +29,12 @@
     {
       title: '上传时间',
       width: 150,
-      sorter: true,
       dataIndex: 'created_at',
     },
     {
       title: '上传用户',
       dataIndex: 'creator',
       width: 150,
-      filters: [
-        { text: 'Male', value: 'male' },
-        { text: 'Female', value: 'female' },
-      ],
     },
     {
       title: '涉及单位',
@@ -50,13 +45,11 @@
       title: '信息种类',
       dataIndex: 'infoType',
       width: 150,
-      sorter: true,
       // defaultHidden: true,
     },
     {
       title: '当前状态',
       width: 150,
-      sorter: true,
       dataIndex: 'state',
     },
   ];

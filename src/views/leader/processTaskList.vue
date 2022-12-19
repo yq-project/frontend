@@ -34,20 +34,17 @@
     {
       title: '发生时间',
       width: 150,
-      sorter: true,
       dataIndex: 'created_at',
     },
     {
       title: '信息种类',
       dataIndex: 'infoType',
       width: 150,
-      sorter: true,
       // defaultHidden: true,
     },
     {
       title: '当前状态',
       width: 150,
-      sorter: true,
       dataIndex: 'state',
     },
   ];
