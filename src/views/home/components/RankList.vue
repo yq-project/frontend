@@ -33,11 +33,10 @@
 
 <style lang="less" scoped>
   .rank {
-    padding: 0 32px 32px 72px;
+    // padding: 0 32px 32px 72px;
+
 
     .list {
-      margin: 25px 0 0;
-      padding: 0;
       list-style: none;
 
       li {
