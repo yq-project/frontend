@@ -139,7 +139,9 @@
       const [registerRefundedModal, { openModal: openRefundedModal }] = useModal();
       const [registerAllocateModal, { openModal: openAllocateModal }] = useModal();
       const callback = (res) => {
+       
         data.value = res;
+        console.log(data.value);
         let date = new Date(data.value.created_at);
         data.value.created_at = `${date.getFullYear()}年${
           date.getMonth() + 1
@@ -234,7 +236,7 @@
       };
       const passProcessTask = async () => {
         // const param = route.query.infoId;
-        await processTaskPassApi(param);
+        await processTaskPassApi(data.value.process_id);
         infoApi(param).then(callback);
       };
       function linkDownload(url) {
